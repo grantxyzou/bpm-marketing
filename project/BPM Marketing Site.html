@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BPM Marketing Site — Wireframes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #111; font-family: 'Space Grotesk', sans-serif; }
+    #root { width: 100%; height: 100vh; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel">
+const { DesignCanvas, DCSection, DCArtboard } = window;
+const { TweaksPanel, TweakSection, TweakRadio, TweakToggle, TweakColor, useTweaks } = window;
+
+// ── Design tokens ─────────────────────────────────────────────────────────────
+const C = {
+  dark:'#100F0F', dark2:'#1a1918',
+  green:'#4ade80', greenDim:'rgba(74,222,128,0.10)', greenBdr:'rgba(74,222,128,0.22)',
+  white:'#ffffff', ink:'#1C1C1E', sub:'#4B5563', muted:'#9CA3AF',
+  border:'#E5E7EB', cream:'#FAF8F5', light:'#F3F4F6',
+  mono:"'IBM Plex Mono', monospace", sketch:"'Caveat', cursive", display:"'Space Grotesk', sans-serif",
+};
+
+// ── Wireframe primitives ──────────────────────────────────────────────────────
+const Sketch = ({ children, size=12, color=C.muted, style={} }) => (
+  <div style={{ fontFamily:C.sketch, fontSize:size, color, lineHeight:1.4, ...style }}>{children}</div>
+);
+const Tag = ({ children }) => (
+  <div style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'4px 14px', borderRadius:99, background:C.greenDim, border:`1px solid ${C.greenBdr}`, fontSize:11, color:C.green, letterSpacing:'0.08em', textTransform:'uppercase', fontFamily:C.mono, width:'fit-content' }}>
+    <span style={{ width:5,height:5,borderRadius:'50%',background:C.green }}/>{children}
+  </div>
+);
+const Btn = ({ children, primary=true, style={} }) => (
+  <div style={{ padding:'13px 28px', borderRadius:8, display:'inline-block', cursor:'pointer', fontWeight:600, fontSize:15, fontFamily:C.display, ...(primary?{background:C.green,color:'#0a1f0e'}:{border:'1.5px solid rgba(255,255,255,0.18)',color:'rgba(255,255,255,0.65)'}), ...style }}>{children}</div>
+);
+
+// ── Phone screen backgrounds ──────────────────────────────────────────────────
+// Aurora (Home + Stats tabs)
+const AuroraScreen = () => (
+  <div style={{ position:'absolute', inset:0 }}>
+    <div style={{ position:'absolute', inset:0, background:'#100F0F' }}/>
+    <div style={{ position:'absolute', top:'-20%', left:'0%', width:'65%', height:'160%', background:'radial-gradient(ellipse, rgba(143,162,176,0.28) 0%, transparent 65%)', filter:'blur(20px)' }}/>
+    <div style={{ position:'absolute', top:'30%', right:'-10%', width:'55%', height:'140%', background:'radial-gradient(ellipse, rgba(190,178,147,0.16) 0%, transparent 65%)', filter:'blur(20px)' }}/>
+  </div>
+);
+
+// Court background (Sign-Ups tab) — real doubles proportions 100:220
+const CourtScreen = () => (
+  <div style={{ position:'absolute', inset:0 }}>
+    <div style={{ position:'absolute', inset:0, background:'#0a160b' }}/>
+    <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 50% 50%, rgba(74,222,128,0.05) 0%, transparent 70%)' }}/>
+    <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%' }} viewBox="0 0 100 220" preserveAspectRatio="xMidYMid meet" opacity="0.22">
+      <rect x="5" y="5" width="90" height="210" stroke="white" strokeWidth="1.2" fill="none"/>
+      <line x1="5" y1="110" x2="95" y2="110" stroke="white" strokeWidth="1.2"/>
+      <line x1="5" y1="89"  x2="95" y2="89"  stroke="white" strokeWidth="0.8"/>
+      <line x1="5" y1="131" x2="95" y2="131" stroke="white" strokeWidth="0.8"/>
+      <line x1="5" y1="13"  x2="95" y2="13"  stroke="white" strokeWidth="0.7"/>
+      <line x1="5" y1="207" x2="95" y2="207" stroke="white" strokeWidth="0.7"/>
+      <line x1="50" y1="5"  x2="50" y2="215" stroke="white" strokeWidth="0.8"/>
+      <line x1="16" y1="5"  x2="16" y2="215" stroke="white" strokeWidth="0.5"/>
+      <line x1="84" y1="5"  x2="84" y2="215" stroke="white" strokeWidth="0.5"/>
+    </svg>
+  </div>
+);
+
+// Faint court lines for hero sections
+const CourtWatermark = () => (
+  <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none' }} viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice" opacity="0.04">
+    <rect x="160" y="40"  width="880" height="480" stroke="white" strokeWidth="2" fill="none"/>
+    <line x1="160" y1="280" x2="1040" y2="280" stroke="white" strokeWidth="2"/>
+    <line x1="160" y1="160" x2="1040" y2="160" stroke="white" strokeWidth="1.2"/>
+    <line x1="160" y1="400" x2="1040" y2="400" stroke="white" strokeWidth="1.2"/>
+    <line x1="160" y1="60"  x2="1040" y2="60"  stroke="white" strokeWidth="1.2"/>
+    <line x1="160" y1="500" x2="1040" y2="500" stroke="white" strokeWidth="1.2"/>
+    <line x1="600" y1="40"  x2="600" y2="520" stroke="white" strokeWidth="1.2"/>
+    <line x1="340" y1="40"  x2="340" y2="520" stroke="white" strokeWidth="0.8"/>
+    <line x1="860" y1="40"  x2="860" y2="520" stroke="white" strokeWidth="0.8"/>
+  </svg>
+);
+
+// ── Bottom nav (shared across phone screens) ──────────────────────────────────
+const MobileNav = ({ active }) => (
+  <div style={{ height:48, background:'rgba(255,255,255,0.07)', borderTop:'1px solid rgba(255,255,255,0.09)', backdropFilter:'blur(10px)', display:'flex', justifyContent:'space-around', alignItems:'center', padding:'0 4px 8px', flexShrink:0 }}>
+    {[['Home',0],['Players',1],['Stats',2],['Profile',3]].map(([l,i]) => (
+      <div key={l} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:2 }}>
+        <div style={{ width:14,height:14,borderRadius:3, background:active===i?'rgba(74,222,128,0.28)':'rgba(255,255,255,0.08)', border:`1px solid ${active===i?'rgba(74,222,128,0.45)':'rgba(255,255,255,0.09)'}` }}/>
+        <div style={{ fontSize:8, color:active===i?C.green:'rgba(255,255,255,0.3)', fontFamily:C.mono }}>{l}</div>
+      </div>
+    ))}
+  </div>
+);
+
+// ── 3 staggered phones — real BPM screens ────────────────────────────────────
+const AppPreview = () => (
+  <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-end', gap:20, padding:'16px 0 0' }}>
+
+    {/* Phone 1 — Home tab */}
+    <div style={{ width:190,height:400,background:'#0d0d0d',borderRadius:34,border:'1.5px solid rgba(255,255,255,0.14)',overflow:'hidden',display:'flex',flexDirection:'column',flexShrink:0,transform:'rotate(-5deg) translateY(28px)',boxShadow:'0 20px 48px rgba(0,0,0,0.55)',zIndex:1,position:'relative' }}>
+      <div style={{ height:24,background:'#0d0d0d',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
+        <div style={{ width:38,height:4,borderRadius:99,background:'rgba(255,255,255,0.1)' }}/>
+      </div>
+      <div style={{ flex:1, position:'relative', overflow:'hidden' }}>
+        <AuroraScreen />
+        <div style={{ position:'relative',zIndex:1,padding:'10px 12px',display:'flex',flexDirection:'column',gap:8 }}>
+          <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center' }}>
+            <div style={{ fontFamily:C.display,fontWeight:700,fontSize:14,color:'#fff',letterSpacing:'-0.04em' }}>bpm<span style={{color:C.green}}>·</span></div>
+            <div style={{ fontSize:8,color:'rgba(255,255,255,0.35)',fontFamily:C.mono }}>Sun May 12</div>
+          </div>
+          <div style={{ background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:10,padding:'9px 10px' }}>
+            <div style={{ fontSize:7,color:C.green,fontFamily:C.mono,letterSpacing:'0.07em',textTransform:'uppercase',marginBottom:4 }}>This Sunday · 7 pm</div>
+            <div style={{ fontSize:10,fontWeight:600,color:'#fff',marginBottom:6 }}>Roundhouse CC · Cts 2 & 3</div>
+            <div style={{ display:'flex',gap:8 }}>
+              <div style={{ fontSize:8,color:'rgba(255,255,255,0.45)',display:'flex',alignItems:'center',gap:3 }}><div style={{width:4,height:4,borderRadius:'50%',background:C.green}}/>8 / 12</div>
+              <div style={{ fontSize:8,color:'rgba(255,255,255,0.45)' }}>$12 / person</div>
+            </div>
+          </div>
+          <div style={{ background:'rgba(74,222,128,0.07)',border:'1px solid rgba(74,222,128,0.2)',borderRadius:10,padding:'8px 10px' }}>
+            <div style={{ fontSize:7,color:C.green,fontFamily:C.mono,letterSpacing:'0.06em',textTransform:'uppercase',marginBottom:4 }}>Announcement</div>
+            <div style={{ fontSize:9,color:'rgba(255,255,255,0.6)',lineHeight:1.5 }}>Session is on — Courts 2 & 3. Let's improve together! Deadline Fri 9 pm.</div>
+          </div>
+        </div>
+      </div>
+      <MobileNav active={0} />
+    </div>
+
+    {/* Phone 2 — Sign-Ups with real court background (centre, elevated) */}
+    <div style={{ width:210,height:460,background:'#0d0d0d',borderRadius:36,border:'1.5px solid rgba(255,255,255,0.18)',overflow:'hidden',display:'flex',flexDirection:'column',flexShrink:0,boxShadow:'0 32px 64px rgba(0,0,0,0.7)',zIndex:3,position:'relative' }}>
+      <div style={{ height:26,background:'#0d0d0d',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
+        <div style={{ width:40,height:4,borderRadius:99,background:'rgba(255,255,255,0.12)' }}/>
+      </div>
+      <div style={{ flex:1, position:'relative', overflow:'hidden' }}>
+        <CourtScreen />
+        <div style={{ position:'relative',zIndex:1,padding:'10px 12px',display:'flex',flexDirection:'column',gap:8 }}>
+          <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center' }}>
+            <div style={{ fontSize:13,fontWeight:700,color:'#fff',letterSpacing:'-0.02em' }}>Sign-Ups</div>
+            <div style={{ fontSize:9,color:C.green,fontFamily:C.mono,background:'rgba(74,222,128,0.1)',border:'1px solid rgba(74,222,128,0.22)',borderRadius:99,padding:'1px 8px' }}>8 playing</div>
+          </div>
+          <div style={{ background:'rgba(255,255,255,0.07)',border:'1px solid rgba(255,255,255,0.14)',borderRadius:10,padding:'8px 10px',backdropFilter:'blur(8px)' }}>
+            <div style={{ fontSize:7,color:'rgba(255,255,255,0.45)',marginBottom:6,letterSpacing:'0.06em',textTransform:'uppercase',fontFamily:C.mono }}>Playing</div>
+            {[['Grant Z.',true,'paid'],['Alex C.',true,'paid'],['Kevin L.',false,'owes $12'],['Sarah M.',true,'paid'],['David W.',true,'paid']].map(([n,paid,label]) => (
+              <div key={n} style={{ display:'flex',justifyContent:'space-between',alignItems:'center',padding:'3.5px 0',borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ fontSize:10,color:'rgba(255,255,255,0.82)' }}>{n}</div>
+                <div style={{ fontSize:7,padding:'2px 7px',borderRadius:99,background:paid?'rgba(74,222,128,0.15)':'rgba(255,100,100,0.12)',color:paid?C.green:'rgba(255,160,160,0.8)' }}>{label}</div>
+              </div>
+            ))}
+            <div style={{ fontSize:8,color:'rgba(255,255,255,0.25)',marginTop:5 }}>+ 3 more</div>
+          </div>
+          <div style={{ background:'rgba(251,191,36,0.08)',border:'1px solid rgba(251,191,36,0.2)',borderRadius:10,padding:'8px 10px',backdropFilter:'blur(8px)' }}>
+            <div style={{ fontSize:7,color:'rgba(251,191,36,0.8)',fontFamily:C.mono,letterSpacing:'0.06em',textTransform:'uppercase',marginBottom:5 }}>Waitlist (2)</div>
+            {[['Jamie H.'],['Chris K.']].map(([n]) => (
+              <div key={n} style={{ fontSize:10,color:'rgba(255,255,255,0.55)',padding:'3px 0',borderBottom:'1px solid rgba(255,255,255,0.05)' }}>{n}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <MobileNav active={1} />
+    </div>
+
+    {/* Phone 3 — Stats */}
+    <div style={{ width:190,height:400,background:'#0d0d0d',borderRadius:34,border:'1.5px solid rgba(255,255,255,0.14)',overflow:'hidden',display:'flex',flexDirection:'column',flexShrink:0,transform:'rotate(5deg) translateY(28px)',boxShadow:'0 20px 48px rgba(0,0,0,0.55)',zIndex:1,position:'relative' }}>
+      <div style={{ height:24,background:'#0d0d0d',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0 }}>
+        <div style={{ width:38,height:4,borderRadius:99,background:'rgba(255,255,255,0.1)' }}/>
+      </div>
+      <div style={{ flex:1, position:'relative', overflow:'hidden' }}>
+        <AuroraScreen />
+        <div style={{ position:'relative',zIndex:1,padding:'10px 12px',display:'flex',flexDirection:'column',gap:8 }}>
+          <div style={{ fontSize:13,fontWeight:700,color:'#fff',letterSpacing:'-0.02em',marginBottom:2 }}>Stats</div>
+          <div style={{ background:'rgba(74,222,128,0.08)',border:'1px solid rgba(74,222,128,0.22)',borderRadius:10,padding:'8px 10px',display:'flex',justifyContent:'space-between',alignItems:'center' }}>
+            <div>
+              <div style={{ fontSize:7,color:C.green,fontFamily:C.mono,letterSpacing:'0.07em',textTransform:'uppercase',marginBottom:3 }}>Your streak</div>
+              <div style={{ fontSize:22,fontWeight:700,color:'#fff',letterSpacing:'-0.04em',fontFamily:C.mono }}>9 <span style={{fontSize:10,color:'rgba(255,255,255,0.45)'}}>sessions</span></div>
+            </div>
+            <div style={{ fontSize:24,opacity:0.6 }}>🔥</div>
+          </div>
+          <div style={{ background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.09)',borderRadius:10,padding:'8px 10px' }}>
+            <div style={{ fontSize:7,color:'rgba(255,255,255,0.38)',marginBottom:7,letterSpacing:'0.06em',textTransform:'uppercase',fontFamily:C.mono }}>12-week attendance</div>
+            <div style={{ display:'flex',flexWrap:'wrap',gap:2.5 }}>
+              {[1,1,0,1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,0,1,1].map((v,i)=>(
+                <div key={i} style={{ width:10,height:10,borderRadius:2,background:v?C.green:'rgba(255,255,255,0.08)',opacity:v?0.65:1 }}/>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <MobileNav active={2} />
+    </div>
+  </div>
+);
+
+// ── Ghost viz for feature cards ───────────────────────────────────────────────
+const VizRoster = () => (
+  <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
+    {[['Grant Z.',true],['Alex C.',true],['Kevin L.',false],['Sarah M.',true],['+ 2 waitlist',null]].map(([n,paid],i) => (
+      <div key={i} style={{ display:'flex', gap:6, alignItems:'center' }}>
+        <div style={{ width:6,height:6,borderRadius:'50%',background:paid===true?C.green:C.ink,opacity:paid===null?0.3:0.7 }}/>
+        <div style={{ width:[52,44,48,56,40][i],height:5,borderRadius:99,background:C.ink,opacity:paid===null?0.25:0.45 }}/>
+        {paid!==null && <div style={{ width:18,height:5,borderRadius:99,background:paid?C.green:C.ink,opacity:paid?0.55:0.2 }}/>}
+      </div>
+    ))}
+  </div>
+);
+const VizCost = () => (
+  <div style={{ display:'flex', flexDirection:'column', gap:7, width:108 }}>
+    {[['Courts',0.70,C.green],['Birds',0.22,'#8FA2B0'],['Other',0.08,'#BEB293']].map(([l,pct,col]) => (
+      <div key={l} style={{ display:'flex', flexDirection:'column', gap:3 }}>
+        <div style={{ width:28,height:4,borderRadius:99,background:C.ink,opacity:0.25 }}/>
+        <div style={{ display:'flex',height:6,borderRadius:99,overflow:'hidden',background:'rgba(0,0,0,0.08)' }}>
+          <div style={{ width:`${pct*100}%`,height:'100%',background:col,opacity:0.65 }}/>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+const VizHeatmap = () => (
+  <div style={{ display:'flex', flexWrap:'wrap', gap:3, width:94 }}>
+    {[1,1,0,1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,0,1,1].map((v,i) => (
+      <div key={i} style={{ width:13,height:13,borderRadius:3,background:v?C.green:C.ink,opacity:v?0.55:0.12 }}/>
+    ))}
+  </div>
+);
+const VizChat = () => (
+  <div style={{ display:'flex', flexDirection:'column', gap:5, width:108 }}>
+    {[[85,'in'],[100,'in'],[55,'out'],[90,'in'],[48,'in']].map(([w,side],i) => (
+      <div key={i} style={{ alignSelf:side==='out'?'flex-end':'flex-start',width:`${w}%`,height:5,borderRadius:99,background:side==='out'?C.green:C.ink,opacity:side==='out'?0.45:[0.5,0.35,0.3,0.2][i]||0.3 }}/>
+    ))}
+    <div style={{ width:44,height:14,borderRadius:4,background:C.green,opacity:0.2,marginTop:2 }}/>
+  </div>
+);
+const VizMembers = () => (
+  <div style={{ display:'flex', flexWrap:'wrap', gap:5, width:88 }}>
+    {Array.from({length:12}).map((_,i) => (
+      <div key={i} style={{ width:20,height:20,borderRadius:'50%',background:i<2?C.green:C.ink,opacity:i<2?0.35:0.14 }}/>
+    ))}
+  </div>
+);
+const VizInventory = () => (
+  <div style={{ display:'flex', flexDirection:'column', gap:8, width:110 }}>
+    {[['Yonex',0.78],['Victor',0.52],['RSL',0.31]].map(([brand,pct]) => (
+      <div key={brand} style={{ display:'flex', flexDirection:'column', gap:3 }}>
+        <div style={{ width:30,height:4,borderRadius:99,background:C.ink,opacity:0.25 }}/>
+        <div style={{ display:'flex',height:6,borderRadius:99,overflow:'hidden',background:'rgba(0,0,0,0.07)' }}>
+          <div style={{ width:`${pct*100}%`,height:'100%',background:C.green,opacity:0.55 }}/>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const featData = [
+  { t:'Invite-gated sign-ups',  d:"Your group, your court. Approved members only — the waitlist fills itself so the right people are always there.",     Viz:VizRoster    },
+  { t:'Cost splitting',         d:'Costs calculated live, payments tracked inline. No chasing, no awkward reminders — just show up and play.',           Viz:VizCost      },
+  { t:'Session insights',       d:'Attendance streaks, skill progression radar, session history. The data that makes your group want to come back.',      Viz:VizHeatmap   },
+  { t:'AI announcements',       d:'One tap to send a polished session announcement. Build anticipation and keep everyone excited to show up.',            Viz:VizChat      },
+  { t:'Roster management',      d:"Know who's in your group, who's growing, and who belongs on the court. Your community, tight and thriving.",           Viz:VizMembers   },
+  { t:'Equipment tracking',     d:'Never run out mid-rally. Track shuttle usage per brand and know your runway before you hit the court.',                Viz:VizInventory },
+];
+
+// ── Shared page sections ──────────────────────────────────────────────────────
+const SiteNav = ({ dark=false }) => (
+  <div style={{ height:64, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 60px', flexShrink:0, background:dark?C.dark:C.white, borderBottom:`1px solid ${dark?'rgba(255,255,255,0.07)':C.border}` }}>
+    <div style={{ fontWeight:700, fontSize:22, letterSpacing:'-0.04em', color:dark?C.white:C.ink }}>bpm<span style={{ color:C.green }}>·</span></div>
+    <div style={{ display:'flex', gap:28, alignItems:'center' }}>
+      {['Features','How it works'].map(l => (
+        <span key={l} style={{ fontSize:14, color:dark?'rgba(255,255,255,0.55)':C.sub, cursor:'pointer' }}>{l}</span>
+      ))}
+      <div style={{ padding:'8px 20px', background:C.green, borderRadius:6, fontSize:14, fontWeight:600, color:'#0a1f0e', cursor:'pointer' }}>Sign in →</div>
+    </div>
+  </div>
+);
+
+const SiteFooter = () => (
+  <div style={{ background:C.dark, padding:'48px 60px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+    <div>
+      <div style={{ fontWeight:700, fontSize:20, color:C.white, letterSpacing:'-0.04em', marginBottom:6 }}>bpm<span style={{ color:C.green }}>·</span></div>
+      <div style={{ fontSize:12, color:'rgba(255,255,255,0.35)', fontFamily:C.mono }}>Badminton session management</div>
+    </div>
+    <div style={{ display:'flex', gap:28 }}>
+      {['Sign in','Features','Contact'].map(l => (
+        <span key={l} style={{ fontSize:13, color:'rgba(255,255,255,0.4)', cursor:'pointer' }}>{l}</span>
+      ))}
+    </div>
+  </div>
+);
+
+const FeatGrid = ({ dark=false }) => (
+  <div style={{ background:dark?C.dark2:C.cream, padding:'80px 60px' }}>
+    <Sketch size={13} style={{ textAlign:'center', marginBottom:10 }}>↓ feature highlights</Sketch>
+    <div style={{ fontSize:36, fontWeight:700, color:dark?C.white:C.ink, textAlign:'center', letterSpacing:'-0.03em', marginBottom:12 }}>Built to help your group grow.</div>
+    <div style={{ fontSize:16, color:dark?'rgba(255,255,255,0.45)':C.sub, textAlign:'center', maxWidth:480, margin:'0 auto 52px', lineHeight:1.65 }}>
+      Simple management, beautiful insights — so every session is one you're excited to show up for.
+    </div>
+    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:18 }}>
+      {featData.map(({ t, d, Viz }) => (
+        <div key={t} style={{ background:dark?'rgba(255,255,255,0.04)':C.white, border:`1px solid ${dark?'rgba(255,255,255,0.09)':C.border}`, borderRadius:12, padding:'24px 22px', position:'relative', overflow:'hidden', minHeight:148 }}>
+          <div style={{ position:'absolute', bottom:14, right:14, opacity:0.08, pointerEvents:'none', zIndex:0 }}><Viz /></div>
+          <div style={{ position:'relative', zIndex:1 }}>
+            <div style={{ width:28,height:28,borderRadius:7,background:C.greenDim,border:`1px solid ${C.greenBdr}`,marginBottom:14 }}/>
+            <div style={{ fontSize:15, fontWeight:600, color:dark?C.white:C.ink, marginBottom:7 }}>{t}</div>
+            <div style={{ fontSize:13, color:dark?'rgba(255,255,255,0.45)':C.sub, lineHeight:1.6 }}>{d}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const HowItWorks = () => (
+  <div style={{ background:C.white, padding:'80px 60px' }}>
+    <Sketch size={13} style={{ textAlign:'center', marginBottom:10 }}>↓ get started</Sketch>
+    <div style={{ fontSize:36, fontWeight:700, color:C.ink, textAlign:'center', letterSpacing:'-0.03em', marginBottom:56 }}>On the court in 5 minutes.</div>
+    <div style={{ display:'flex', gap:0, position:'relative' }}>
+      <div style={{ position:'absolute', top:24, left:'16.6%', right:'16.6%', height:1, background:C.border }}/>
+      {[
+        ['01','Set up your session','Venue, capacity, cost per court, sign-up deadline. Done in two minutes.'],
+        ['02','Add your group','Build the invite list. Anyone outside it joins the waitlist — no gatekeeping required.'],
+        ['03','Share and play','Post the link. Players sign up and pay themselves. You focus on your game.'],
+      ].map(([n,t,d]) => (
+        <div key={n} style={{ flex:1, textAlign:'center', padding:'0 32px', position:'relative' }}>
+          <div style={{ width:48,height:48,borderRadius:'50%',background:C.white,border:`1.5px solid ${C.greenBdr}`,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:14,fontWeight:700,color:C.green,fontFamily:C.mono,position:'relative',zIndex:1 }}>{n}</div>
+          <div style={{ fontSize:17, fontWeight:600, color:C.ink, marginBottom:10 }}>{t}</div>
+          <div style={{ fontSize:13, color:C.sub, lineHeight:1.65 }}>{d}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const WhoFor = () => (
+  <div style={{ background:C.light, padding:'72px 60px', textAlign:'center' }}>
+    <Sketch size={13} style={{ marginBottom:10 }}>↓ who it's for</Sketch>
+    <div style={{ fontSize:34, fontWeight:700, color:C.ink, letterSpacing:'-0.03em', marginBottom:14 }}>For groups that want to get better.</div>
+    <div style={{ fontSize:16, color:C.sub, maxWidth:540, margin:'0 auto 40px', lineHeight:1.7 }}>
+      If you book the court, rally the crew, and want your group to keep growing — bpm. clears the admin so everyone can focus on improving.
+    </div>
+    <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
+      {['Club captain','Drop-in host','Rec-league coordinator','Corporate wellness organizer'].map(tag => (
+        <div key={tag} style={{ padding:'8px 20px', border:`1.5px solid ${C.border}`, borderRadius:99, fontSize:14, color:C.sub, background:C.white }}>{tag}</div>
+      ))}
+    </div>
+  </div>
+);
+
+const CTABand = () => (
+  <div style={{ background:C.dark, padding:'80px 60px', textAlign:'center' }}>
+    <div style={{ fontSize:40, fontWeight:700, color:C.white, letterSpacing:'-0.03em', marginBottom:14 }}>More court time starts here.</div>
+    <div style={{ fontSize:16, color:'rgba(255,255,255,0.45)', marginBottom:40 }}>bpm. handles the admin. Your group focuses on the game.</div>
+    <Btn primary style={{ fontSize:16, padding:'16px 40px' }}>Get your group on the court →</Btn>
+  </div>
+);
+
+// ══════════════════════════════════════════════════════════════════════════════
+// WIREFRAME B — Split hero (matches sketch: left text / right phone)
+// ══════════════════════════════════════════════════════════════════════════════
+function WireframeB() {
+  return (
+    <div style={{ fontFamily:C.display, background:C.white }}>
+      <SiteNav dark />
+      {/* Split hero */}
+      <div style={{ background:C.dark, display:'flex', minHeight:580, position:'relative', overflow:'hidden' }}>
+        <CourtWatermark />
+        {/* Left — text */}
+        <div style={{ flex:1, padding:'80px 56px', display:'flex', flexDirection:'column', justifyContent:'center', position:'relative', zIndex:1 }}>
+          <Tag style={{ marginBottom:22 }}>For badminton organizers</Tag>
+          <h1 style={{ fontSize:58, fontWeight:700, color:C.white, letterSpacing:'-0.04em', lineHeight:1.1, marginBottom:20 }}>
+            Play more.<br/>Organize less.
+          </h1>
+          <p style={{ fontSize:17, color:'rgba(255,255,255,0.52)', lineHeight:1.68, marginBottom:36, maxWidth:380 }}>
+            bpm. handles the admin so your group spends Sunday getting better at badminton — not settling up.
+          </p>
+          <div style={{ display:'flex', gap:12 }}>
+            <Btn primary>Get started →</Btn>
+            <Btn primary={false}>Sign in</Btn>
+          </div>
+          <div style={{ marginTop:44, display:'flex', gap:36 }}>
+            {[['12+','Players growing together'],['↑','Skills every session'],['0h','Admin overhead']].map(([n,l]) => (
+              <div key={n}>
+                <div style={{ fontSize:28,fontWeight:700,color:C.green,letterSpacing:'-0.03em',lineHeight:1 }}>{n}</div>
+                <div style={{ fontSize:12,color:'rgba(255,255,255,0.38)',marginTop:4 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Right — real phone with court screen */}
+        <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'60px 56px 60px 0', position:'relative', zIndex:1 }}>
+          <div style={{ width:260, background:'#0d0d0d', borderRadius:40, border:'2px solid rgba(255,255,255,0.16)', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 40px 80px rgba(0,0,0,0.7)' }}>
+            <div style={{ height:28, background:'#0d0d0d', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+              <div style={{ width:44,height:5,borderRadius:99,background:'rgba(255,255,255,0.12)' }}/>
+            </div>
+            <div style={{ position:'relative', overflow:'hidden' }}>
+              <CourtScreen />
+              <div style={{ position:'relative', zIndex:1, padding:'12px 14px' }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
+                  <div style={{ fontSize:15, fontWeight:700, color:'#fff', letterSpacing:'-0.02em' }}>Sign-Ups</div>
+                  <div style={{ fontSize:10,color:C.green,fontFamily:C.mono,background:'rgba(74,222,128,0.12)',border:'1px solid rgba(74,222,128,0.25)',borderRadius:99,padding:'2px 10px' }}>8 / 12</div>
+                </div>
+                <div style={{ background:'rgba(255,255,255,0.07)',border:'1px solid rgba(255,255,255,0.14)',borderRadius:12,padding:'10px 12px',marginBottom:10,backdropFilter:'blur(8px)' }}>
+                  <div style={{ fontSize:8,color:'rgba(255,255,255,0.45)',marginBottom:8,letterSpacing:'0.07em',textTransform:'uppercase',fontFamily:C.mono }}>Playing</div>
+                  {[['Grant Z.',true],['Alex C.',true],['Kevin L.',false],['Sarah M.',true],['David W.',true],['Jenny L.',true]].map(([n,paid]) => (
+                    <div key={n} style={{ display:'flex',justifyContent:'space-between',alignItems:'center',padding:'4px 0',borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{ fontSize:11,color:'rgba(255,255,255,0.82)' }}>{n}</div>
+                      <div style={{ fontSize:8,padding:'2px 7px',borderRadius:99,background:paid?'rgba(74,222,128,0.15)':'rgba(255,100,100,0.12)',color:paid?C.green:'rgba(255,160,160,0.8)' }}>{paid?'paid':'owes $12'}</div>
+                    </div>
+                  ))}
+                  <div style={{ fontSize:9,color:'rgba(255,255,255,0.25)',marginTop:6 }}>+ 2 more</div>
+                </div>
+                <div style={{ background:'rgba(251,191,36,0.08)',border:'1px solid rgba(251,191,36,0.2)',borderRadius:12,padding:'10px 12px',backdropFilter:'blur(8px)' }}>
+                  <div style={{ fontSize:8,color:'rgba(251,191,36,0.8)',marginBottom:6,letterSpacing:'0.07em',textTransform:'uppercase',fontFamily:C.mono }}>Waitlist (2)</div>
+                  {[['Jamie H.'],['Chris K.']].map(([n]) => (
+                    <div key={n} style={{ fontSize:11,color:'rgba(255,255,255,0.55)',padding:'3px 0',borderBottom:'1px solid rgba(255,255,255,0.05)' }}>{n}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <MobileNav active={1} />
+          </div>
+        </div>
+      </div>
+      {/* Features */}
+      <div style={{ background:C.cream, padding:'72px 60px' }}>
+        <div style={{ fontSize:34,fontWeight:700,color:C.ink,textAlign:'center',letterSpacing:'-0.03em',marginBottom:48 }}>Everything the captain needs.</div>
+        <div style={{ display:'flex', gap:18 }}>
+          {[['Sign-ups + waitlist','Invite-gated. Auto-promotes from waitlist when a spot opens.'],
+            ['Cost splitting','Court + consumables ÷ headcount. Updated live as players sign up.'],
+            ['Session insights','Attendance heatmap. Streak tracking. Skill radar. All from history.'],
+            ['AI announcements','Type rough notes. Let Claude polish them into proper reminders.']].map(([t,d]) => (
+            <div key={t} style={{ flex:1,padding:'22px 18px',background:C.white,border:`1px solid ${C.border}`,borderRadius:12 }}>
+              <div style={{ width:30,height:30,background:C.greenDim,border:`1px solid ${C.greenBdr}`,borderRadius:8,marginBottom:14 }}/>
+              <div style={{ fontSize:14,fontWeight:600,color:C.ink,marginBottom:8 }}>{t}</div>
+              <div style={{ fontSize:13,color:C.sub,lineHeight:1.6 }}>{d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <HowItWorks /><WhoFor /><CTABand /><SiteFooter />
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// WIREFRAME C — Problem-led narrative
+// ══════════════════════════════════════════════════════════════════════════════
+function WireframeC() {
+  return (
+    <div style={{ fontFamily:C.display, background:C.white }}>
+      <div style={{ height:64,background:C.dark,borderBottom:'1px solid rgba(255,255,255,0.07)',display:'flex',alignItems:'center',padding:'0 60px',justifyContent:'space-between' }}>
+        <div style={{ fontWeight:700,fontSize:22,letterSpacing:'-0.04em',color:C.white }}>bpm<span style={{color:C.green}}>·</span></div>
+        <div style={{ display:'flex',gap:16 }}>
+          <div style={{ padding:'8px 20px',border:'1px solid rgba(255,255,255,0.15)',borderRadius:6,fontSize:14,color:'rgba(255,255,255,0.6)' }}>Sign in</div>
+          <div style={{ padding:'8px 20px',background:C.green,borderRadius:6,fontSize:14,fontWeight:600,color:'#0a1f0e' }}>Get started →</div>
+        </div>
+      </div>
+      {/* Hero — the problem */}
+      <div style={{ background:C.dark, padding:'100px 80px 80px', textAlign:'center', position:'relative', overflow:'hidden' }}>
+        <CourtWatermark />
+        <div style={{ maxWidth:740, margin:'0 auto', position:'relative', zIndex:1 }}>
+          <Sketch color="rgba(255,255,255,0.28)" size={13} style={{ marginBottom:20 }}>the problem</Sketch>
+          <h1 style={{ fontSize:68,fontWeight:700,color:C.white,letterSpacing:'-0.045em',lineHeight:1.1,marginBottom:28,position:'relative' }}>
+            The group chat is not<br/>a sign-up sheet.
+            <div style={{ position:'absolute',top:-28,right:-16,background:'rgba(74,222,128,0.12)',border:'1px solid rgba(74,222,128,0.25)',borderRadius:99,padding:'4px 12px',fontSize:12,fontFamily:C.sketch,color:C.green,whiteSpace:'nowrap',transform:'rotate(2deg)' }}>★ hero tagline</div>
+          </h1>
+          <div style={{ width:48,height:2,background:C.green,margin:'0 auto 28px',opacity:0.55 }}/>
+          <p style={{ fontSize:18,color:'rgba(255,255,255,0.48)',lineHeight:1.7,maxWidth:520,margin:'0 auto 40px' }}>
+            Every week: announce, count replies, chase payments, remind no-shows. Hours of admin for two hours of badminton — time better spent getting better.
+          </p>
+          <div style={{ fontSize:20,color:'rgba(255,255,255,0.7)',fontWeight:500,marginBottom:40 }}>
+            Meet <span style={{color:C.green,fontWeight:700}}>bpm.</span> — simple management, beautiful insights, more time on the court.
+          </div>
+          <div style={{ display:'flex',gap:14,justifyContent:'center' }}>
+            <Btn primary style={{ padding:'14px 36px',fontSize:16 }}>Get your group on the court →</Btn>
+            <Btn primary={false}>Sign in</Btn>
+          </div>
+        </div>
+      </div>
+      {/* Numbered feature list */}
+      <div style={{ background:C.white, padding:'80px 60px 20px' }}>
+        <div style={{ fontSize:34,fontWeight:700,color:C.ink,textAlign:'center',letterSpacing:'-0.03em',marginBottom:56 }}>Four problems solved.</div>
+        {[
+          { n:'01',label:'Sign-ups',title:'One link. Your group fills it.',desc:"Post it in the chat. Approved members claim their spot. The waitlist takes care of itself. No counting, no DMs — just show up ready to play.",Viz:VizRoster },
+          { n:'02',label:'Payments',title:"See who's in. See who owes.",desc:'Cost per court ÷ players, updated live. Track payments inline — no spreadsheet, no mental arithmetic, no awkward conversations after the game.',Viz:VizCost },
+          { n:'03',label:'Announcements',title:'Get the group excited to play.',desc:'Type a rough note. Claude turns it into a polished, bilingual announcement that builds anticipation and gets everyone showing up ready.',Viz:VizChat },
+          { n:'04',label:'Insights',title:'Watch your group improve.',desc:'Attendance streaks. Skill progression radar. Session history that shows how far the group has come — the data that makes people want to come back.',Viz:VizHeatmap },
+        ].map(({ n,label,title,desc,Viz },i) => (
+          <div key={n}>
+            {i > 0 && <div style={{ height:1,background:C.border }}/>}
+            <div style={{ display:'flex',gap:56,padding:'48px 0',alignItems:'center' }}>
+              <div style={{ width:48,flexShrink:0,fontSize:13,fontWeight:700,color:C.green,fontFamily:C.mono,letterSpacing:'0.04em',opacity:0.7 }}>{n}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:11,letterSpacing:'0.09em',textTransform:'uppercase',color:C.green,fontFamily:C.mono,marginBottom:10,opacity:0.8 }}>{label}</div>
+                <div style={{ fontSize:28,fontWeight:700,color:C.ink,letterSpacing:'-0.03em',lineHeight:1.2,marginBottom:12 }}>{title}</div>
+                <div style={{ fontSize:15,color:C.sub,lineHeight:1.72,maxWidth:420 }}>{desc}</div>
+              </div>
+              <div style={{ width:200,height:140,background:C.cream,border:`1px solid ${C.border}`,borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,overflow:'hidden' }}>
+                <div style={{ opacity:0.35,transform:'scale(1.4)',transformOrigin:'center' }}><Viz /></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <WhoFor />
+      <div style={{ background:C.dark,padding:'80px 60px',textAlign:'center' }}>
+        <div style={{ fontSize:42,fontWeight:700,color:C.white,letterSpacing:'-0.03em',marginBottom:14 }}>Your group deserves better Sundays.</div>
+        <div style={{ fontSize:16,color:'rgba(255,255,255,0.43)',marginBottom:40 }}>bpm. handles the admin. Everyone focuses on the game.</div>
+        <Btn primary style={{ fontSize:16,padding:'16px 40px' }}>Get your group on the court →</Btn>
+      </div>
+      <SiteFooter />
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// WIREFRAME AT — Tweakable editorial (shown in canvas as artboard A)
+// ══════════════════════════════════════════════════════════════════════════════
+const TweakCtx = React.createContext(null);
+
+const FeatList = () => (
+  <div style={{ background:C.white, padding:'80px 60px' }}>
+    <div style={{ fontSize:36,fontWeight:700,color:C.ink,letterSpacing:'-0.03em',marginBottom:48 }}>Built to help your group grow.</div>
+    {featData.map(({ t,d,Viz },i) => (
+      <div key={t}>
+        {i > 0 && <div style={{ height:1,background:C.border }}/>}
+        <div style={{ display:'flex',gap:40,padding:'32px 0',alignItems:'center' }}>
+          <div style={{ width:180,flexShrink:0 }}><div style={{ fontSize:14,fontWeight:600,color:C.ink }}>{t}</div></div>
+          <div style={{ flex:1,fontSize:14,color:C.sub,lineHeight:1.65 }}>{d}</div>
+          <div style={{ width:80,opacity:0.15,flexShrink:0 }}><Viz /></div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+function WireframeAT() {
+  const t = React.useContext(TweakCtx);
+  const accent = t ? t.accentColor : C.green;
+  const headline =
+    t && t.heroTagline === 'problem' ? 'The group chat is not\na sign-up sheet.'  :
+    t && t.heroTagline === 'action'  ? 'Less organizing.\nMore improving.'         :
+                                       'Play more badminton.\nManage less.';
+  return (
+    <div style={{ fontFamily:C.display, background:C.white }}>
+      <SiteNav />
+      <div style={{ background:C.dark, padding:'96px 60px 80px', textAlign:'center', display:'flex', flexDirection:'column', alignItems:'center', position:'relative', overflow:'hidden' }}>
+        <CourtWatermark />
+        <div style={{ position:'relative', zIndex:1, display:'flex', flexDirection:'column', alignItems:'center' }}>
+          {t && t.showAnnotations && <Tag style={{ marginBottom:24 }}>Badminton group management</Tag>}
+          {!(t && t.showAnnotations) && <div style={{ marginBottom:24 }}/>}
+          <h1 style={{ fontSize:76,fontWeight:700,color:C.white,letterSpacing:'-0.045em',lineHeight:1.08,maxWidth:720,margin:'0 auto 26px',whiteSpace:'pre-line' }}>{headline}</h1>
+          <p style={{ fontSize:19,color:'rgba(255,255,255,0.52)',maxWidth:520,margin:'0 auto 44px',lineHeight:1.68 }}>
+            bpm. handles the logistics — so your group can focus on what actually matters: getting better, together.
+          </p>
+          <div style={{ display:'flex', gap:14 }}>
+            <div style={{ padding:'13px 28px',background:accent,borderRadius:8,fontWeight:600,fontSize:15,color:'#0a1f0e' }}>Get your group on the court →</div>
+            <Btn primary={false}>Sign in</Btn>
+          </div>
+          <div style={{ marginTop:60, width:'82%' }}><AppPreview /></div>
+        </div>
+      </div>
+      {t && t.featStyle === 'list' ? <FeatList /> : <FeatGrid />}
+      <HowItWorks /><WhoFor /><CTABand /><SiteFooter />
+    </div>
+  );
+}
+
+// ── Root ──────────────────────────────────────────────────────────────────────
+const TWEAK_DEFAULS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#4ade80",
+  "showAnnotations": true,
+  "heroTagline": "problem",
+  "featStyle": "grid"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULS);
+  return (
+    <TweakCtx.Provider value={t}>
+      <TweaksPanel>
+        <TweakSection label="Hero headline">
+          <TweakRadio id="heroTagline" value={t.heroTagline} onChange={v => setTweak('heroTagline', v)}
+            options={[{label:'Problem',value:'problem'},{label:'Growth',value:'group'},{label:'Action',value:'action'}]} />
+        </TweakSection>
+        <TweakSection label="Accent color">
+          <TweakColor id="accentColor" value={t.accentColor} onChange={v => setTweak('accentColor', v)}
+            options={['#4ade80','#52a850','#38bdf8','#a78bfa']} />
+        </TweakSection>
+        <TweakSection label="Features layout (A)">
+          <TweakRadio id="featStyle" value={t.featStyle} onChange={v => setTweak('featStyle', v)}
+            options={[{label:'Grid',value:'grid'},{label:'List',value:'list'}]} />
+        </TweakSection>
+        <TweakSection label="Annotations">
+          <TweakToggle id="showAnnotations" value={t.showAnnotations} onChange={v => setTweak('showAnnotations', v)} label="Show sketch labels" />
+        </TweakSection>
+      </TweaksPanel>
+      <DesignCanvas>
+        <DCSection id="wf" title="BPM Marketing Site — Layout Explorations">
+          <DCArtboard id="a" label="A — Editorial / Centered hero" width={1200} height={2600}>
+            <WireframeAT />
+          </DCArtboard>
+          <DCArtboard id="b" label="B — Split hero + phone (sketch direction)" width={1200} height={2500}>
+            <WireframeB />
+          </DCArtboard>
+          <DCArtboard id="c" label="C — Problem-led narrative" width={1200} height={2800}>
+            <WireframeC />
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    </TweakCtx.Provider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

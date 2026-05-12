@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bpm. — Play more badminton. Manage less.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --page:#100F0F;--surface:#1a1918;
+      --green:#4ade80;--gdim:rgba(74,222,128,.10);--gbdr:rgba(74,222,128,.22);
+      --ink:#e2e8f0;--soft:rgba(255,255,255,.68);--muted:rgba(255,255,255,.48);
+      --glass:linear-gradient(160deg,rgba(255,255,255,.065) 0%,rgba(255,255,255,.02) 100%);
+      --gbdr2:rgba(255,255,255,.13);--ghi:inset 0 1px 0 rgba(255,255,255,.14);
+      --gshadow:0 8px 40px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.14);
+      --cream:#FAF8F5;--light:#F3F4F6;--inkd:#1C1C1E;--subd:#4B5563;--bdrd:#E5E7EB;
+      --fd:'Space Grotesk',system-ui,sans-serif;
+      --fb:'IBM Plex Sans',system-ui,sans-serif;
+      --fm:'IBM Plex Mono',monospace;
+      --ease:cubic-bezier(.23,1,.32,1);
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--page);color:var(--ink);font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+
+    /* ── Nav ── */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 60px;transition:background .3s,box-shadow .3s}
+    .nav.scrolled{background:rgba(16,15,15,.90);backdrop-filter:blur(14px) saturate(180%);box-shadow:0 1px 0 rgba(255,255,255,.07)}
+    .logo{font-family:var(--fd);font-weight:700;font-size:22px;letter-spacing:-.04em;color:var(--ink);display:inline-flex;align-items:baseline;gap:.04em}
+    .logo-dot{color:var(--green);font-size:1.1em;line-height:1}
+    .nav-links{display:flex;gap:28px;align-items:center}
+    .nav-link{font-size:14px;color:var(--muted);transition:color .15s}
+    .nav-link:hover{color:var(--ink)}
+    .btn-nav{padding:8px 20px;background:var(--green);border-radius:6px;font-family:var(--fd);font-size:14px;font-weight:600;color:#0a1f0e;transition:opacity .15s,box-shadow .2s}
+    .btn-nav:hover{opacity:.88;box-shadow:0 0 20px rgba(74,222,128,.22)}
+
+    /* ── Buttons ── */
+    .btn-p{padding:14px 32px;background:var(--green);border-radius:8px;font-family:var(--fd);font-weight:600;font-size:16px;color:#0a1f0e;transition:opacity .15s,box-shadow .25s;display:inline-block;white-space:nowrap}
+    .btn-p:hover{opacity:.9;box-shadow:0 0 36px rgba(74,222,128,.28)}
+    .btn-g{padding:13px 30px;border:1.5px solid rgba(255,255,255,.18);border-radius:8px;font-family:var(--fd);font-weight:500;font-size:16px;color:rgba(255,255,255,.65);transition:border-color .2s,color .2s;display:inline-block}
+    .btn-g:hover{border-color:rgba(255,255,255,.38);color:rgba(255,255,255,.9)}
+
+    /* ── Aurora ── */
+    .aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .blob{position:absolute;border-radius:50%}
+    .b1{width:65%;height:150%;top:-30%;left:-5%;background:radial-gradient(ellipse,rgba(143,162,176,.52) 0%,transparent 60%);filter:blur(50px);animation:d1 7s ease-in-out infinite}
+    .b2{width:55%;height:130%;top:5%;right:-10%;background:radial-gradient(ellipse,rgba(190,178,147,.4) 0%,transparent 60%);filter:blur(50px);animation:d2 9s ease-in-out infinite;opacity:.7}
+    .b3{width:45%;height:100%;bottom:-20%;left:25%;background:radial-gradient(ellipse,rgba(74,222,128,.1) 0%,transparent 60%);filter:blur(50px);animation:d3 11s ease-in-out infinite}
+    @keyframes d1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.06)}}
+    @keyframes d2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-25px,20px) scale(.96)}66%{transform:translate(18px,8px) scale(1.04)}}
+    @keyframes d3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,-35px) scale(1.09)}}
+
+    /* ── Hero — split layout ── */
+    .hero{position:relative;min-height:100vh;overflow:hidden;background:var(--page);display:flex;align-items:center;padding:100px 60px 80px}
+    .hero-inner{position:relative;z-index:1;width:100%;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:480px 1fr;gap:64px;align-items:center}
+    .hero-tag{display:inline-flex;align-items:center;gap:7px;padding:5px 16px;border-radius:99px;background:var(--gdim);border:1px solid var(--gbdr);font-family:var(--fm);font-size:11px;color:var(--green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:28px}
+    .tag-ping{width:6px;height:6px;border-radius:50%;background:var(--green)}
+    .hero-h1{font-family:var(--fd);font-size:clamp(44px,4.2vw,68px);font-weight:700;letter-spacing:-.048em;line-height:1.06;color:#fff;margin-bottom:24px;text-wrap:pretty}
+    .hero-sub{font-size:18px;color:var(--soft);line-height:1.7;margin-bottom:40px;max-width:420px}
+    .hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+
+    /* ── Phones ── */
+    .phones{display:flex;justify-content:center;align-items:flex-end;gap:14px;height:520px;position:relative}
+    .phone{background:#0c0c0c;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;position:relative}
+    .ph-s{width:190px;height:400px;border-radius:34px;border:1.5px solid rgba(255,255,255,.13);box-shadow:0 20px 50px rgba(0,0,0,.6)}
+    .ph-l{transform:rotate(-5deg) translateY(20px);z-index:1;align-self:flex-end}
+    .ph-r{transform:rotate(5deg) translateY(20px);z-index:1;align-self:flex-end}
+    .ph-c{width:228px;height:480px;border-radius:38px;border:1.5px solid rgba(255,255,255,.18);box-shadow:0 40px 80px rgba(0,0,0,.72),0 0 0 1px rgba(255,255,255,.05);z-index:3;animation:pfloat 5s ease-in-out infinite;align-self:flex-end}
+    @keyframes pfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+    .pnotch{height:26px;background:#0c0c0c;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .pnotch-p{width:40px;height:4px;border-radius:99px;background:rgba(255,255,255,.1)}
+    .pscreen{flex:1;position:relative;overflow:hidden}
+    .pnav{height:46px;background:rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.09);backdrop-filter:blur(10px);display:flex;justify-content:space-around;align-items:center;padding:0 4px 6px;flex-shrink:0}
+    .pni{display:flex;flex-direction:column;align-items:center;gap:2px}
+    .pnic{width:13px;height:13px;border-radius:3px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.09)}
+    .pnic.on{background:rgba(74,222,128,.28);border-color:rgba(74,222,128,.45)}
+    .pnlb{font-size:8px;color:rgba(255,255,255,.28);font-family:var(--fm)}
+    .pnlb.on{color:var(--green)}
+
+    /* Screen BGs */
+    .bg-aurora{position:absolute;inset:0;background:#100F0F}
+    .bg-aurora::before{content:'';position:absolute;top:-20%;left:0;width:65%;height:160%;background:radial-gradient(ellipse,rgba(143,162,176,.3) 0%,transparent 65%);filter:blur(20px)}
+    .bg-aurora::after{content:'';position:absolute;top:30%;right:-10%;width:55%;height:140%;background:radial-gradient(ellipse,rgba(190,178,147,.18) 0%,transparent 65%);filter:blur(20px)}
+    .bg-court{position:absolute;inset:0;background:#091409}
+    .bg-court::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(74,222,128,.07) 0%,transparent 70%)}
+
+    /* Shared phone UI */
+    .pcont{position:relative;z-index:1;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+    .pcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:9px 10px;backdrop-filter:blur(8px)}
+    .pcard-g{background:rgba(74,222,128,.07);border-color:rgba(74,222,128,.2)}
+    .pcard-a{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.2)}
+    .plbl{font-family:var(--fm);font-size:7px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+    .pg{color:var(--green)}.pw{color:rgba(255,255,255,.38)}.pa{color:rgba(251,191,36,.8)}
+    .prow{display:flex;justify-content:space-between;align-items:center;padding:3.5px 0;border-bottom:1px solid rgba(255,255,255,.055)}
+    .pn{font-size:10px;color:rgba(255,255,255,.82)}
+    .pp{font-size:7px;padding:2px 6px;border-radius:99px}
+    .pp-p{background:rgba(74,222,128,.15);color:var(--green)}
+    .pp-o{background:rgba(255,100,100,.12);color:rgba(255,160,160,.85)}
+
+    /* ── Stats band ── */
+    .stats{background:var(--surface);border-top:1px solid rgba(255,255,255,.07);padding:52px 60px}
+    .stats-g{display:flex;justify-content:center;gap:96px;max-width:900px;margin:0 auto}
+    .stat-n{font-family:var(--fd);font-size:46px;font-weight:700;color:var(--green);letter-spacing:-.045em;line-height:1;margin-bottom:8px}
+    .stat-l{font-size:14px;color:var(--muted);line-height:1.4;max-width:130px;text-align:center}
+
+    /* ── Features ── */
+    .features{background:var(--surface);padding:88px 60px 96px}
+    .eye{font-family:var(--fm);font-size:11px;color:var(--green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+    .sh2{font-family:var(--fd);font-size:clamp(30px,3vw,44px);font-weight:700;letter-spacing:-.038em;line-height:1.12;margin-bottom:14px}
+    .ssub{font-size:17px;color:var(--soft);line-height:1.65;max-width:460px;margin-bottom:52px}
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+    /* Cards: viz starts dim, lifts + reveals on hover */
+    .fc{background:var(--glass);border:1px solid var(--gbdr2);border-radius:16px;padding:26px 24px;position:relative;overflow:hidden;min-height:172px;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s;box-shadow:var(--gshadow);cursor:default}
+    .fc::after{content:'';position:absolute;inset:0;border-radius:16px;box-shadow:var(--ghi);pointer-events:none}
+    .fc:hover{transform:translateY(-4px);box-shadow:0 20px 56px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.2);border-color:rgba(255,255,255,.22)}
+    .fic{width:32px;height:32px;border-radius:9px;background:var(--gdim);border:1px solid var(--gbdr);margin-bottom:16px;display:flex;align-items:center;justify-content:center;transition:background .3s,border-color .3s,box-shadow .3s}
+    .fc:hover .fic{background:rgba(74,222,128,.18);border-color:rgba(74,222,128,.4);box-shadow:0 0 20px rgba(74,222,128,.15)}
+    .ft{font-family:var(--fd);font-size:15px;font-weight:600;color:var(--ink);margin-bottom:8px;transition:color .2s}
+    .fc:hover .ft{color:#fff}
+    .fd2{font-size:13px;color:var(--muted);line-height:1.65;transition:color .2s}
+    .fc:hover .fd2{color:rgba(255,255,255,.6)}
+    /* Ghost viz: low opacity → reveals on hover */
+    .fviz{position:absolute;bottom:16px;right:16px;pointer-events:none;opacity:.09;transition:opacity .4s var(--ease),transform .4s var(--ease);transform:scale(1)}
+    .fc:hover .fviz{opacity:.3;transform:scale(1.06)}
+
+    /* ── How it works ── */
+    .how{background:var(--cream);padding:88px 60px}
+    .how .sh2,.how .eye{color:var(--inkd)}
+    .how .eye{color:#52a850}
+    .how .ssub{color:var(--subd)}
+    .steps{display:flex;position:relative;margin-top:56px}
+    .steps::before{content:'';position:absolute;top:24px;left:16.6%;right:16.6%;height:1px;background:var(--bdrd);z-index:0}
+    .step{flex:1;text-align:center;padding:0 32px;position:relative;z-index:1}
+    .step-n{width:48px;height:48px;border-radius:50%;background:var(--cream);border:1.5px solid rgba(82,168,80,.38);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:var(--fm);font-size:14px;font-weight:600;color:#52a850}
+    .step-t{font-family:var(--fd);font-size:17px;font-weight:600;color:var(--inkd);margin-bottom:10px}
+    .step-d{font-size:14px;color:var(--subd);line-height:1.65}
+
+    /* ── Pricing ── */
+    .pricing{background:var(--page);padding:88px 60px;position:relative;overflow:hidden}
+    .pricing .sh2{color:#fff}
+    .pricing .ssub{color:var(--soft)}
+    .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px;margin:0 auto}
+    .pc{border-radius:20px;padding:36px 32px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);display:flex;flex-direction:column}
+    .pc-pro{background:var(--glass);border-color:var(--gbdr);box-shadow:var(--gshadow),var(--ghi);position:relative;overflow:hidden}
+    .pc-pro::after{content:'';position:absolute;inset:0;border-radius:20px;box-shadow:var(--ghi);pointer-events:none}
+    .pc-badge{display:inline-block;padding:3px 12px;background:var(--gdim);border:1px solid var(--gbdr);border-radius:99px;font-family:var(--fm);font-size:10px;color:var(--green);letter-spacing:.07em;text-transform:uppercase;margin-bottom:20px}
+    .pc-tier{font-family:var(--fd);font-size:18px;font-weight:600;color:var(--ink);margin-bottom:8px}
+    .pc-price{font-family:var(--fd);font-size:48px;font-weight:700;letter-spacing:-.04em;color:#fff;line-height:1;margin-bottom:6px}
+    .pc-price span{font-size:20px;color:var(--muted);font-weight:400}
+    .pc-desc{font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.55}
+    .pc-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px;flex:1}
+    .pc-features li{font-size:14px;color:var(--soft);display:flex;align-items:center;gap:10px}
+    .pc-features li::before{content:'';width:16px;height:16px;border-radius:50%;background:var(--gdim);border:1px solid var(--gbdr);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+    .pc-features .chk{width:16px;height:16px;border-radius:50%;background:var(--gdim);border:1px solid var(--gbdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--green)}
+    .btn-price-ghost{padding:13px 24px;border:1.5px solid rgba(255,255,255,.14);border-radius:8px;font-family:var(--fd);font-weight:500;font-size:15px;color:rgba(255,255,255,.6);display:inline-block;transition:border-color .2s,color .2s;width:100%;text-align:center}
+    .btn-price-ghost:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.88)}
+    .btn-price-pro{display:block;text-align:center;padding:13px 24px;background:var(--green);border-radius:8px;font-family:var(--fd);font-weight:600;font-size:15px;color:#0a1f0e;transition:opacity .15s,box-shadow .25s}
+    .btn-price-pro:hover{opacity:.9;box-shadow:0 0 30px rgba(74,222,128,.25)}
+
+    /* ── Who ── */
+    .who{background:var(--light);padding:80px 60px;text-align:center}
+    .who .sh2,.who .eye{color:var(--inkd)}
+    .who .eye{color:#52a850}
+    .who .ssub{color:var(--subd);max-width:540px;margin:0 auto 40px}
+    .tag-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .tag-pill{padding:9px 22px;border:1.5px solid var(--bdrd);border-radius:99px;font-size:14px;color:var(--subd);background:#fff;transition:border-color .15s,color .15s}
+    .tag-pill:hover{border-color:#4ade80;color:var(--inkd)}
+
+    /* ── CTA ── */
+    .cta-sec{background:var(--page);padding:96px 60px;text-align:center;position:relative;overflow:hidden}
+    .cta-inner{position:relative;z-index:1}
+    .cta-h2{font-family:var(--fd);font-size:clamp(36px,4.5vw,56px);font-weight:700;letter-spacing:-.045em;color:#fff;margin-bottom:16px;line-height:1.08}
+    .cta-sub{font-size:18px;color:var(--muted);margin-bottom:44px}
+
+    /* ── Footer ── */
+    .footer{background:#090909;padding:48px 60px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.06)}
+    .footer-links{display:flex;gap:28px}
+    .footer-link{font-size:13px;color:rgba(255,255,255,.38);transition:color .15s}
+    .footer-link:hover{color:rgba(255,255,255,.7)}
+
+    /* ── Responsive ── */
+
+    /* Tablet: 1024px */
+    @media(max-width:1024px){
+      .hero{padding:100px 40px 60px}
+      .hero-inner{grid-template-columns:1fr 1fr;gap:40px}
+      .features,.how,.pricing,.who,.cta-sec{padding-left:40px;padding-right:40px}
+      .stats{padding-left:40px;padding-right:40px}
+      .stats-g{gap:48px}
+      .ph-s{width:168px;height:354px}
+      .ph-c{width:200px;height:424px}
+      .phones{height:460px}
+    }
+
+    /* Large mobile / small tablet: 768px */
+    @media(max-width:768px){
+      .nav{padding:0 24px}
+      .nav-link{display:none}
+
+      .hero{padding:88px 24px 56px;min-height:auto}
+      .hero-inner{grid-template-columns:1fr;gap:48px;text-align:center}
+      .hero-tag{margin-left:auto;margin-right:auto}
+      .hero-sub{margin-left:auto;margin-right:auto}
+      .hero-ctas{justify-content:center}
+      .hero-h1{font-size:clamp(36px,8vw,52px)}
+
+      .phones{height:380px;justify-content:center}
+      .ph-s{width:148px;height:310px;border-radius:28px}
+      .ph-c{width:174px;height:368px;border-radius:32px}
+
+      .stats{padding:40px 24px}
+      .stats-g{gap:20px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+      .stat-n{font-size:34px}
+      .stat-l{font-size:12px;max-width:110px}
+
+      .features{padding:64px 24px 72px}
+      .feat-grid{grid-template-columns:1fr 1fr;gap:12px}
+
+      .how{padding:64px 24px}
+      .steps{flex-direction:column;gap:40px}
+      .steps::before{display:none}
+      .step{padding:0}
+
+      .pricing{padding:64px 24px}
+      .price-grid{grid-template-columns:1fr;max-width:440px;gap:20px}
+
+      .who{padding:64px 24px}
+
+      .cta-sec{padding:72px 24px}
+
+      .footer{padding:40px 24px;flex-direction:column;gap:28px;text-align:center}
+      .footer-links{justify-content:center;flex-wrap:wrap;gap:20px}
+    }
+
+    /* Mobile portrait: 480px */
+    @media(max-width:480px){
+      .hero-h1{font-size:clamp(32px,9vw,44px)}
+      .btn-p,.btn-g{font-size:15px;padding:13px 24px}
+      .hero-ctas{flex-direction:column;align-items:center;gap:10px}
+
+      .phones{gap:10px;height:340px}
+      .ph-s{width:126px;height:268px;border-radius:24px}
+      .ph-c{width:152px;height:324px;border-radius:28px}
+
+      .feat-grid{grid-template-columns:1fr}
+
+      .stats-g{gap:14px}
+      .stat-n{font-size:26px}
+      .stat-l{font-size:11px;max-width:80px}
+
+      .sh2{font-size:clamp(26px,7vw,36px)}
+      .cta-h2{font-size:clamp(28px,8vw,44px)}
+
+      .price-grid{max-width:100%}
+      .pc,.pc-pro{padding:28px 24px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav" id="nav">
+  <a href="#" class="logo">bpm<span class="logo-dot">·</span></a>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
+    <a href="https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm" class="btn-nav">Sign in →</a>
+  </div>
+</nav>
+
+<!-- ── Hero — split layout ── -->
+<section class="hero">
+  <div class="aurora">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <!-- Corrected landscape badminton court watermark -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.042;pointer-events:none" viewBox="0 0 1400 620" preserveAspectRatio="xMidYMid slice">
+    <!-- Outer boundary (doubles) -->
+    <rect x="150" y="60" width="1100" height="500" fill="none" stroke="white" stroke-width="2"/>
+    <!-- Net (vertical center line) -->
+    <line x1="700" y1="60" x2="700" y2="560" stroke="white" stroke-width="2.5"/>
+    <!-- Short service lines: 1.98/13.40 × 1100 = 162.5px from net -->
+    <line x1="537.5" y1="60" x2="537.5" y2="560" stroke="white" stroke-width="1"/>
+    <line x1="862.5" y1="60" x2="862.5" y2="560" stroke="white" stroke-width="1"/>
+    <!-- Long service lines (doubles): 0.76/13.40 × 1100 = 62.4px from baseline -->
+    <line x1="212" y1="60" x2="212" y2="560" stroke="white" stroke-width=".8"/>
+    <line x1="1188" y1="60" x2="1188" y2="560" stroke="white" stroke-width=".8"/>
+    <!-- Center service lines (horizontal, only in service zones): y = 310 -->
+    <line x1="212" y1="310" x2="537.5" y2="310" stroke="white" stroke-width=".9"/>
+    <line x1="862.5" y1="310" x2="1188" y2="310" stroke="white" stroke-width=".9"/>
+    <!-- Singles sidelines: 0.46/6.10 × 500 = 37.7px from outer -->
+    <line x1="150" y1="97.7" x2="1250" y2="97.7" stroke="white" stroke-width=".6"/>
+    <line x1="150" y1="522.3" x2="1250" y2="522.3" stroke="white" stroke-width=".6"/>
+  </svg>
+
+  <div class="hero-inner">
+    <!-- Left: text -->
+    <div>
+      <div class="hero-tag"><span class="tag-ping"></span>Badminton group management</div>
+      <h1 class="hero-h1">The group chat is not<br>a sign-up sheet.</h1>
+      <p class="hero-sub">bpm. handles the logistics — so your group can focus on what actually matters: getting better, together.</p>
+      <div class="hero-ctas">
+        <a href="https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm" class="btn-p">Get your group on the court →</a>
+        <a href="https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm" class="btn-g">Sign in</a>
+      </div>
+    </div>
+
+    <!-- Right: 3 staggered phones, large -->
+    <div class="phones">
+
+      <!-- Phone 1 — Home tab -->
+      <div class="phone ph-s ph-l">
+        <div class="pnotch"><div class="pnotch-p"></div></div>
+        <div class="pscreen">
+          <div class="bg-aurora"></div>
+          <div class="pcont">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-family:var(--fd);font-weight:700;font-size:14px;color:#fff;letter-spacing:-.04em">bpm<span style="color:var(--green)">·</span></div>
+              <div style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.35)">Sun May 12</div>
+            </div>
+            <div class="pcard">
+              <div class="plbl pg" style="margin-bottom:5px">This Sunday · 7 pm</div>
+              <div style="font-size:10px;font-weight:600;color:#fff;margin-bottom:8px">Roundhouse CC · Cts 2 & 3</div>
+              <div style="height:4px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:5px">
+                <div style="width:66.6%;height:100%;background:var(--green);border-radius:99px;opacity:.7"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between">
+                <div style="font-size:8px;color:rgba(255,255,255,.45)">8 / 12 signed up</div>
+                <div style="font-size:8px;color:rgba(255,255,255,.45)">$12 / person</div>
+              </div>
+            </div>
+            <div class="pcard pcard-g">
+              <div class="plbl pg">Announcement</div>
+              <div style="font-size:9px;color:rgba(255,255,255,.65);line-height:1.5">Session is on — Courts 2 & 3. Let's improve together! Deadline Fri 9 pm.</div>
+            </div>
+            <div class="pcard" style="background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.2)">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+                <div style="width:14px;height:14px;border-radius:50%;background:rgba(74,222,128,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <div style="width:6px;height:6px;border-radius:50%;background:var(--green)"></div>
+                </div>
+                <div style="font-size:9px;font-weight:600;color:var(--green)">Signed up, Grant Z.!</div>
+              </div>
+              <div style="font-size:8px;color:rgba(255,255,255,.4);line-height:1.4">You're confirmed for Sunday.</div>
+              <div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.08);font-size:8px;color:rgba(255,255,255,.45);text-align:center">View list →</div>
+            </div>
+          </div>
+        </div>
+        <div class="pnav">
+          <div class="pni"><div class="pnic on"></div><div class="pnlb on">Home</div></div>
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Players</div></div>
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Stats</div></div>
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Profile</div></div>
+        </div>
+      </div>
+
+      <!-- Phone 2 — Sign-Ups, correct court background (centre) -->
+      <div class="phone ph-c">
+        <div class="pnotch"><div class="pnotch-p"></div></div>
+        <div class="pscreen">
+          <div class="bg-court"></div>
+          <!-- Corrected vertical badminton court (BWF proportions, 100×220 viewBox) -->
+          <!-- Short service: 1.98m from net (y=110±31) → y=79 and y=141 -->
+          <!-- Long service doubles: 0.76m from baseline → y=17 and y=203 -->
+          <!-- Center line: x=50, top zone y=17→79, bottom zone y=141→203 -->
+          <!-- Singles sidelines: 0.46m from outer → x=12 and x=88 -->
+          <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.24" viewBox="0 0 100 220" preserveAspectRatio="xMidYMid meet">
+            <rect x="5" y="5" width="90" height="210" stroke="white" stroke-width="1.2" fill="none"/>
+            <line x1="5" y1="110" x2="95" y2="110" stroke="white" stroke-width="1.6"/>
+            <line x1="5" y1="79" x2="95" y2="79" stroke="white" stroke-width=".9"/>
+            <line x1="5" y1="141" x2="95" y2="141" stroke="white" stroke-width=".9"/>
+            <line x1="5" y1="17" x2="95" y2="17" stroke="white" stroke-width=".7"/>
+            <line x1="5" y1="203" x2="95" y2="203" stroke="white" stroke-width=".7"/>
+            <line x1="50" y1="17" x2="50" y2="79" stroke="white" stroke-width=".9"/>
+            <line x1="50" y1="141" x2="50" y2="203" stroke="white" stroke-width=".9"/>
+            <line x1="12" y1="5" x2="12" y2="215" stroke="white" stroke-width=".5"/>
+            <line x1="88" y1="5" x2="88" y2="215" stroke="white" stroke-width=".5"/>
+          </svg>
+          <div class="pcont">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+              <div style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-.02em">Sign-Ups</div>
+              <div style="font-family:var(--fm);font-size:9px;color:var(--green);background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.22);border-radius:99px;padding:1px 8px">8 / 12</div>
+            </div>
+            <div class="pcard">
+              <div class="plbl pw" style="margin-bottom:6px;letter-spacing:.06em">Sunday, May 12</div>
+              <div class="prow"><span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.35);width:14px;text-align:right;flex-shrink:0">1</span><span class="pn" style="margin-left:8px">Grant Z.</span><span style="font-size:7px;color:var(--green);margin-left:auto;background:rgba(74,222,128,.12);padding:1px 5px;border-radius:99px;flex-shrink:0">you</span></div>
+              <div class="prow"><span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.35);width:14px;text-align:right;flex-shrink:0">2</span><span class="pn" style="margin-left:8px">Alex C.</span></div>
+              <div class="prow"><span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.35);width:14px;text-align:right;flex-shrink:0">3</span><span class="pn" style="margin-left:8px">Kevin L.</span></div>
+              <div class="prow"><span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.35);width:14px;text-align:right;flex-shrink:0">4</span><span class="pn" style="margin-left:8px">Sarah M.</span></div>
+              <div class="prow" style="border-bottom:none"><span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.35);width:14px;text-align:right;flex-shrink:0">5</span><span class="pn" style="margin-left:8px">David W.</span></div>
+              <div style="font-size:8px;color:rgba(255,255,255,.25);margin-top:5px;font-family:var(--fm)">+ 3 more</div>
+            </div>
+            <div class="pcard pcard-a">
+              <div class="plbl pa" style="margin-bottom:5px">Waitlist · 2</div>
+              <div class="prow"><span style="font-family:var(--fm);font-size:8px;color:rgba(251,191,36,.45);width:14px;text-align:right;flex-shrink:0">1</span><span style="font-size:10px;color:rgba(255,255,255,.5);margin-left:8px">Jamie H.</span></div>
+              <div class="prow" style="border-bottom:none"><span style="font-family:var(--fm);font-size:8px;color:rgba(251,191,36,.45);width:14px;text-align:right;flex-shrink:0">2</span><span style="font-size:10px;color:rgba(255,255,255,.5);margin-left:8px">Chris K.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="pnav">
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Home</div></div>
+          <div class="pni"><div class="pnic on"></div><div class="pnlb on">Players</div></div>
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Stats</div></div>
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Profile</div></div>
+        </div>
+      </div>
+
+      <!-- Phone 3 — Stats -->
+      <div class="phone ph-s ph-r">
+        <div class="pnotch"><div class="pnotch-p"></div></div>
+        <div class="pscreen">
+          <div class="bg-aurora"></div>
+          <div class="pcont">
+            <div style="font-size:13px;font-weight:700;color:#fff;letter-spacing:-.02em;margin-bottom:6px">Stats</div>
+            <div class="pcard" style="display:flex;align-items:center;gap:10px;border-left:2.5px solid var(--green);padding:9px 10px">
+              <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <span style="font-family:var(--fm);font-size:15px;font-weight:700;color:#fff">9</span>
+              </div>
+              <div style="min-width:0">
+                <div style="font-size:7px;color:rgba(255,255,255,.42);letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px">Grant Z. — Personal Best</div>
+                <div style="font-size:10px;font-weight:600;color:#fff;line-height:1.3">You're on a 9-week streak</div>
+                <div style="font-size:8px;color:rgba(255,255,255,.38);margin-top:2px">Longest run: 9. Keep showing up.</div>
+              </div>
+            </div>
+            <div class="pcard">
+              <div class="plbl pw" style="margin-bottom:7px">Attendance — last 12 weeks</div>
+              <div style="display:flex;flex-wrap:wrap;gap:2.5px">
+                <div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div><div style="width:10px;height:10px;border-radius:2px;background:#4ade80;opacity:.65"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pnav">
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Home</div></div>
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Players</div></div>
+          <div class="pni"><div class="pnic on"></div><div class="pnlb on">Stats</div></div>
+          <div class="pni"><div class="pnic"></div><div class="pnlb">Profile</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats band ── -->
+<div class="stats">
+  <div class="stats-g">
+    <div style="text-align:center"><div class="stat-n">12+</div><div class="stat-l">Players growing together each session</div></div>
+    <div style="text-align:center"><div class="stat-n">↑</div><div class="stat-l">Skills tracked week over week</div></div>
+    <div style="text-align:center"><div class="stat-n">0h</div><div class="stat-l">Admin overhead when bpm. runs the session</div></div>
+    <div style="text-align:center"><div class="stat-n">$0</div><div class="stat-l">Awkward payment conversations</div></div>
+  </div>
+</div>
+
+<!-- ── Features ── -->
+<section class="features" id="features">
+  <div class="eye">Built for organizers</div>
+  <h2 class="sh2">Built to help your group grow.</h2>
+  <p class="ssub">Simple management, beautiful insights — so every session is one you're excited to show up for.</p>
+  <div class="feat-grid">
+
+    <div class="fc">
+      <div class="fic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a3 3 0 100 6A3 3 0 008 1zM3 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="ft">Invite-gated sign-ups</div>
+      <div class="fd2">Your group, your court. Approved members only — the waitlist fills itself so the right people are always there.</div>
+      <div class="fviz" style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:5px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#4ade80;opacity:.7"></div><div style="width:52px;height:4px;border-radius:99px;background:white;opacity:.4"></div><div style="width:18px;height:4px;border-radius:99px;background:#4ade80;opacity:.55"></div></div>
+        <div style="display:flex;gap:5px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#4ade80;opacity:.7"></div><div style="width:44px;height:4px;border-radius:99px;background:white;opacity:.4"></div><div style="width:18px;height:4px;border-radius:99px;background:#4ade80;opacity:.55"></div></div>
+        <div style="display:flex;gap:5px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;opacity:.3"></div><div style="width:48px;height:4px;border-radius:99px;background:white;opacity:.2"></div><div style="width:18px;height:4px;border-radius:99px;background:white;opacity:.12"></div></div>
+        <div style="display:flex;gap:5px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#4ade80;opacity:.7"></div><div style="width:56px;height:4px;border-radius:99px;background:white;opacity:.4"></div><div style="width:18px;height:4px;border-radius:99px;background:#4ade80;opacity:.55"></div></div>
+        <div style="display:flex;gap:5px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#4ade80;opacity:.7"></div><div style="width:38px;height:4px;border-radius:99px;background:white;opacity:.4"></div><div style="width:18px;height:4px;border-radius:99px;background:#4ade80;opacity:.55"></div></div>
+      </div>
+    </div>
+
+    <div class="fc">
+      <div class="fic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#4ade80" stroke-width="1.5"/><path d="M8 4.5v7M6 6.5h2.5a1.5 1.5 0 010 3H6" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="ft">Cost splitting</div>
+      <div class="fd2">Costs calculated live, payments tracked inline. No chasing, no awkward reminders — just show up and play.</div>
+      <div class="fviz" style="display:flex;flex-direction:column;gap:7px;width:108px">
+        <div style="display:flex;flex-direction:column;gap:2px"><div style="width:28px;height:4px;border-radius:99px;background:white;opacity:.25"></div><div style="height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07)"><div style="width:70%;height:100%;background:#4ade80;opacity:.65"></div></div></div>
+        <div style="display:flex;flex-direction:column;gap:2px"><div style="width:22px;height:4px;border-radius:99px;background:white;opacity:.25"></div><div style="height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07)"><div style="width:22%;height:100%;background:#8FA2B0;opacity:.65"></div></div></div>
+        <div style="display:flex;flex-direction:column;gap:2px"><div style="width:18px;height:4px;border-radius:99px;background:white;opacity:.25"></div><div style="height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07)"><div style="width:8%;height:100%;background:#BEB293;opacity:.65"></div></div></div>
+      </div>
+    </div>
+
+    <div class="fc">
+      <div class="fic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="9.5" width="3" height="5" rx="1" stroke="#4ade80" stroke-width="1.5"/><rect x="6.5" y="6.5" width="3" height="8" rx="1" stroke="#4ade80" stroke-width="1.5"/><rect x="11.5" y="2.5" width="3" height="12" rx="1" stroke="#4ade80" stroke-width="1.5"/></svg></div>
+      <div class="ft">Session insights</div>
+      <div class="fd2">Attendance streaks, skill progression radar, session history. The data that makes your group want to come back.</div>
+      <div class="fviz" style="display:flex;flex-wrap:wrap;gap:3px;width:94px">
+        <div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:white;opacity:.08"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:white;opacity:.08"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:white;opacity:.08"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:white;opacity:.08"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div><div style="width:12px;height:12px;border-radius:2px;background:#4ade80;opacity:.55"></div>
+      </div>
+    </div>
+
+    <div class="fc">
+      <div class="fic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l1.5 3.5L13 6l-3.5 1.5L8 11l-1.5-3.5L3 6l3.5-1.5L8 1z" stroke="#4ade80" stroke-width="1.5" stroke-linejoin="round"/><path d="M13 10l.75 1.75L15.5 12.5l-1.75.75L13 15l-.75-1.75L10.5 12.5l1.75-.75L13 10z" stroke="#4ade80" stroke-width="1" stroke-linejoin="round"/></svg></div>
+      <div class="ft">AI announcements</div>
+      <div class="fd2">One tap to send a polished session announcement. Build anticipation and keep everyone excited to show up.</div>
+      <div class="fviz" style="display:flex;flex-direction:column;gap:5px;width:108px">
+        <div style="width:88%;height:5px;border-radius:99px;background:white;opacity:.45"></div>
+        <div style="width:100%;height:5px;border-radius:99px;background:white;opacity:.3"></div>
+        <div style="width:58%;height:5px;border-radius:99px;background:#4ade80;opacity:.42;align-self:flex-end"></div>
+        <div style="width:92%;height:5px;border-radius:99px;background:white;opacity:.26"></div>
+        <div style="width:72%;height:5px;border-radius:99px;background:white;opacity:.22"></div>
+        <div style="width:44px;height:14px;border-radius:6px;background:#4ade80;opacity:.22;margin-top:2px"></div>
+      </div>
+    </div>
+
+    <div class="fc">
+      <div class="fic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5.5 6a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM1 14c0-2.5 2-4.5 4.5-4.5S10 11.5 10 14" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round"/><path d="M11 5.5a2 2 0 100-4 2 2 0 000 4zM15 13.5c0-2-1.6-3.5-3.5-3.5-.5 0-1 .1-1.5.3" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="ft">Roster management</div>
+      <div class="fd2">Know who's in your group, who's growing, and who belongs on the court. Your community, tight and thriving.</div>
+      <div class="fviz" style="display:flex;flex-wrap:wrap;gap:5px;width:88px">
+        <div style="width:19px;height:19px;border-radius:50%;background:#4ade80;opacity:.38"></div><div style="width:19px;height:19px;border-radius:50%;background:#4ade80;opacity:.38"></div><div style="width:19px;height:19px;border-radius:50%;background:white;opacity:.1"></div><div style="width:19px;height:19px;border-radius:50%;background:white;opacity:.1"></div><div style="width:19px;height:19px;border-radius:50%;background:white;opacity:.1"></div><div style="width:19px;height:19px;border-radius:50%;background:white;opacity:.1"></div><div style="width:19px;height:19px;border-radius:50%;background:white;opacity:.1"></div><div style="width:19px;height:19px;border-radius:50%;background:white;opacity:.1"></div><div style="width:19px;height:19px;border-radius:50%;background:white;opacity:.1"></div><div style="width:19px;height:19px;border-radius:50%;background:white;opacity:.1"></div>
+      </div>
+    </div>
+
+    <div class="fc">
+      <div class="fic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="13.5" rx="3" ry="2" stroke="#4ade80" stroke-width="1.5"/><path d="M5.5 11.5L3 4M8 11.5V3M10.5 11.5L13 4" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="8" cy="4" rx="5" ry="1.5" stroke="#4ade80" stroke-width="1.5"/></svg></div>
+      <div class="ft">Equipment tracking</div>
+      <div class="fd2">Never run out mid-rally. Track shuttle usage per brand and know your runway before you hit the court.</div>
+      <div class="fviz" style="display:flex;flex-direction:column;gap:8px;width:110px">
+        <div style="display:flex;flex-direction:column;gap:3px"><div style="width:30px;height:4px;border-radius:99px;background:white;opacity:.25"></div><div style="height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07)"><div style="width:78%;height:100%;background:#4ade80;opacity:.6"></div></div></div>
+        <div style="display:flex;flex-direction:column;gap:3px"><div style="width:24px;height:4px;border-radius:99px;background:white;opacity:.25"></div><div style="height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07)"><div style="width:52%;height:100%;background:#4ade80;opacity:.6"></div></div></div>
+        <div style="display:flex;flex-direction:column;gap:3px"><div style="width:18px;height:4px;border-radius:99px;background:white;opacity:.25"></div><div style="height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07)"><div style="width:31%;height:100%;background:#4ade80;opacity:.6"></div></div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── How it works ── -->
+<section class="how" id="how">
+  <div class="eye">Get started</div>
+  <h2 class="sh2">On the court in 5 minutes.</h2>
+  <p class="ssub">No onboarding call. No sales team. Set up your first session in the time it takes to book the court.</p>
+  <div class="steps">
+    <div class="step"><div class="step-n">01</div><div class="step-t">Set up your session</div><div class="step-d">Venue, capacity, cost per court, sign-up deadline. Done in two minutes.</div></div>
+    <div class="step"><div class="step-n">02</div><div class="step-t">Add your group</div><div class="step-d">Build the invite list. Anyone outside it joins the waitlist automatically.</div></div>
+    <div class="step"><div class="step-n">03</div><div class="step-t">Share and play</div><div class="step-d">Post the link. Players sign up and pay themselves. You focus on your game.</div></div>
+  </div>
+</section>
+
+<!-- ── Pricing ── -->
+<section class="pricing" id="pricing">
+  <div class="aurora" style="opacity:.4"><div class="blob b1"></div><div class="blob b2"></div></div>
+  <div style="position:relative;z-index:1;text-align:center;margin-bottom:56px">
+    <div class="eye">Simple pricing</div>
+    <h2 class="sh2" style="color:#fff">Free to start. Pro when you're ready.</h2>
+    <p class="ssub" style="margin:0 auto;text-align:center">No credit card to try. Upgrade when your group outgrows the free tier.</p>
+  </div>
+  <div class="price-grid" style="position:relative;z-index:1">
+
+    <!-- Free tier -->
+    <div class="pc">
+      <div class="pc-tier" style="color:var(--ink)">Group</div>
+      <div class="pc-price" style="margin-top:12px">Free</div>
+      <div class="pc-desc">Perfect for a single regular group. Everything you need to run a great session.</div>
+      <ul class="pc-features">
+        <li><span class="chk">✓</span>1 session per week</li>
+        <li><span class="chk">✓</span>Up to 12 players</li>
+        <li><span class="chk">✓</span>Sign-ups + waitlist</li>
+        <li><span class="chk">✓</span>Cost splitting + payment tracking</li>
+        <li><span class="chk">✓</span>Attendance stats</li>
+      </ul>
+      <a href="https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm" class="btn-price-ghost">Join your group →</a>
+    </div>
+
+    <!-- Pro tier -->
+    <div class="pc pc-pro">
+      <div class="pc-badge">Most popular</div>
+      <div class="pc-tier" style="color:var(--ink)">Club</div>
+      <div class="pc-price" style="margin-top:12px">$15<span> / mo</span></div>
+      <div class="pc-desc">For serious groups that want to grow. AI features, advanced analytics, no limits.</div>
+      <ul class="pc-features">
+        <li><span class="chk">✓</span>Unlimited sessions</li>
+        <li><span class="chk">✓</span>Unlimited players</li>
+        <li><span class="chk">✓</span>Everything in Group</li>
+        <li><span class="chk">✓</span>AI announcements (Claude-powered)</li>
+        <li><span class="chk">✓</span>Skill progression radar</li>
+        <li><span class="chk">✓</span>Advanced stats + attendance heatmap</li>
+        <li><span class="chk">✓</span>CSV export</li>
+      </ul>
+      <a href="https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm" class="btn-price-pro">Get started →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Who it's for ── -->
+<section class="who">
+  <div class="eye">Who it's for</div>
+  <h2 class="sh2" style="margin-bottom:14px">For groups that want to get better.</h2>
+  <p class="ssub">If you book the court, rally the crew, and want your group to keep growing — bpm. clears the admin so everyone can focus on improving.</p>
+  <div class="tag-row">
+    <span class="tag-pill">Club captain</span>
+    <span class="tag-pill">Drop-in host</span>
+    <span class="tag-pill">Rec-league coordinator</span>
+    <span class="tag-pill">Corporate wellness organizer</span>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-sec">
+  <div class="aurora" style="opacity:.55"><div class="blob b1"></div><div class="blob b2"></div></div>
+  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.04;pointer-events:none" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice">
+    <rect x="200" y="30" width="800" height="340" fill="none" stroke="white" stroke-width="1.5"/>
+    <line x1="600" y1="30" x2="600" y2="370" stroke="white" stroke-width="2"/>
+    <line x1="467" y1="30" x2="467" y2="370" stroke="white" stroke-width=".9"/>
+    <line x1="733" y1="30" x2="733" y2="370" stroke="white" stroke-width=".9"/>
+    <line x1="600" y1="200" x2="467" y2="200" stroke="white" stroke-width=".8"/>
+    <line x1="600" y1="200" x2="733" y2="200" stroke="white" stroke-width=".8"/>
+  </svg>
+  <div class="cta-inner">
+    <h2 class="cta-h2">More court time starts here.</h2>
+    <p class="cta-sub">bpm. handles the admin. Your group focuses on the game.</p>
+    <a href="https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm" class="btn-p" style="font-size:17px;padding:16px 44px">Get your group on the court →</a>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div>
+    <div class="logo" style="margin-bottom:6px;font-size:20px">bpm<span class="logo-dot">·</span></div>
+    <div style="font-family:var(--fm);font-size:12px;color:rgba(255,255,255,.28)">Badminton session management</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://badminton-app-gzendxb6fzefafgm.canadacentral-01.azurewebsites.net/bpm" class="footer-link">Sign in</a>
+    <a href="#features" class="footer-link">Features</a>
+    <a href="#how" class="footer-link">How it works</a>
+    <a href="#pricing" class="footer-link">Pricing</a>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+</script>
+</body>
+</html>
