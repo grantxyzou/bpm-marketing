@@ -302,6 +302,39 @@ p {
   transition: opacity 320ms var(--ease-glass);
 }
 
+/* The phone zooms in as the story enters and eases back as it leaves. */
+.week-story {
+  view-timeline-name: --week;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .week-zoom {
+      animation: week-zoom linear both;
+      animation-timeline: --week;
+    }
+  }
+}
+
+@keyframes week-zoom {
+  entry 10% {
+    transform: scale(0.78) translateY(6%);
+    opacity: 0.5;
+  }
+  entry 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  exit 0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  exit 60% {
+    transform: scale(0.88);
+    opacity: 0.6;
+  }
+}
+
 details > summary {
   list-style: none;
   cursor: pointer;
