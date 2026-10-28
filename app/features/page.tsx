@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { pageMeta } from '@/lib/meta';
 import { PageHero } from '@/components/PageHero';
+import { NextSteps } from '@/components/NextSteps';
 import { FeatureRow } from '@/components/FeatureRow';
 import { Section } from '@/components/Section';
 import { CallToAction } from '@/components/CallToAction';
@@ -13,6 +14,7 @@ export default function FeaturesPage() {
   return (
     <>
       <PageHero
+        path="/features"
         label="Features"
         title="Everything a weekly session needs, and nothing it doesn’t."
         lede="Sign-ups, money, stringing, stats and gear for players, with proper tools for the person running it all."
@@ -43,6 +45,7 @@ export default function FeaturesPage() {
           ))}
         </ul>
       </Section>
+      <NextSteps links={['/how-it-works', '/organisers']} />
       <CallToAction />
     </>
   );

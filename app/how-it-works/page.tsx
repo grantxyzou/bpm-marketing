@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { pageMeta } from '@/lib/meta';
 import { PageHero } from '@/components/PageHero';
+import { NextSteps } from '@/components/NextSteps';
 import { Section } from '@/components/Section';
 import { Phone } from '@/components/Phone';
 import { CallToAction } from '@/components/CallToAction';
@@ -46,6 +48,7 @@ export default function HowItWorksPage() {
   return (
     <>
       <PageHero
+        path="/how-it-works"
         label="How it works"
         title="One week, two points of view."
         lede="Players and organisers see the same session from different sides. Here’s what each of them does."
@@ -61,13 +64,19 @@ export default function HowItWorksPage() {
       </Section>
       <Section label="If you organise" hue="orange" title="The weekly job, step by step.">
         <div className="grid items-start gap-12 md:grid-cols-[1.2fr_1fr]">
-          <Flow steps={ORGANISER} hue="var(--orange)" />
+          <div className="flex flex-col gap-8">
+            <Flow steps={ORGANISER} hue="var(--orange)" />
+            <Link href="/organisers" className="text-accent underline-offset-4 hover:underline">
+              Everything organisers get, and how to start a club →
+            </Link>
+          </div>
           <div className="flex justify-center gap-4">
             <Phone src="/media/screens/admin-command-center.webp" alt="BPM organiser console" className="max-w-[230px]" />
             <Phone src="/media/screens/admin-send-the-bill.webp" alt="BPM Send the bill screen" className="mt-10 hidden max-w-[230px] sm:block" />
           </div>
         </div>
       </Section>
+      <NextSteps links={['/features', '/organisers']} />
       <CallToAction />
     </>
   );

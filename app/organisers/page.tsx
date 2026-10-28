@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { pageMeta } from '@/lib/meta';
 import { PageHero } from '@/components/PageHero';
+import { NextSteps } from '@/components/NextSteps';
 import { Section } from '@/components/Section';
 import { Phone } from '@/components/Phone';
 import { CallToAction } from '@/components/CallToAction';
@@ -37,6 +38,7 @@ export default function OrganisersPage() {
   return (
     <>
       <PageHero
+        path="/organisers"
         hue="orange"
         label="For organisers"
         title="You book the courts. BPM does the rest of the admin."
@@ -105,6 +107,7 @@ export default function OrganisersPage() {
         </div>
       </Section>
 
+      <NextSteps links={['/how-it-works', '/faq']} />
       <CallToAction />
     </>
   );

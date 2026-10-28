@@ -36,7 +36,9 @@ export function Footer() {
     <footer className="mt-24 border-t border-divider">
       <div className="container-site grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div className="flex flex-col gap-4">
-          <Logo />
+          <Link href="/" aria-label="BPM home" className="self-start">
+            <Logo />
+          </Link>
           <p className="max-w-xs text-sm text-text-3">
             A small app for casual badminton clubs. Made by a player, for the people who run the session every week.
           </p>

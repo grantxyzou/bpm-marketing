@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { pageMeta } from '@/lib/meta';
 import { PageHero } from '@/components/PageHero';
+import { NextSteps } from '@/components/NextSteps';
 import { Section } from '@/components/Section';
 
 export const metadata: Metadata = pageMeta('/architecture', 'How it’s built', 'BPM’s architecture: one Next.js deployment serving iPhone, Android and the web, a per-club data model, and the services behind it.');
@@ -52,6 +53,7 @@ export default function ArchitecturePage() {
   return (
     <>
       <PageHero
+        path="/architecture"
         label="How it’s built"
         title="One app, three front doors."
         lede="For the curious. BPM is a single Next.js deployment. The iPhone and Android apps are native shells around it, so every release reaches every device at once."
@@ -105,6 +107,7 @@ export default function ArchitecturePage() {
           ))}
         </div>
       </Section>
+      <NextSteps links={['/features', '/faq']} />
     </>
   );
 }
