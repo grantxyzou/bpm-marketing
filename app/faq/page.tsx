@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { pageMeta } from '@/lib/meta';
 import { PageHero } from '@/components/PageHero';
+import { NextSteps } from '@/components/NextSteps';
 import { JsonLd } from '@/components/JsonLd';
+import { OpenHashedDetails } from '@/components/OpenHashedDetails';
 import { CallToAction } from '@/components/CallToAction';
 import { FAQ } from '@/content/en';
 
@@ -21,7 +23,8 @@ export default function FaqPage() {
   return (
     <>
       <JsonLd data={faqLd} />
-      <PageHero label="FAQ" title="Questions people actually ask." lede="If yours isn’t here, the support page has a way to get in touch." />
+      <OpenHashedDetails />
+      <PageHero path="/faq" label="FAQ" title="Questions people actually ask." lede="If yours isn’t here, the support page has a way to get in touch." />
       <div className="container-site pb-16">
         <div className="mx-auto max-w-3xl divide-y divide-[var(--divider)] border-y border-divider">
           {FAQ.map((f) => (
@@ -37,6 +40,7 @@ export default function FaqPage() {
           ))}
         </div>
       </div>
+      <NextSteps links={['/features', '/download']} />
       <CallToAction />
     </>
   );

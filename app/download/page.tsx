@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { pageMeta } from '@/lib/meta';
 import { PageHero } from '@/components/PageHero';
+import { NextSteps } from '@/components/NextSteps';
 import { Section } from '@/components/Section';
 import { SITE } from '@/lib/site';
 
@@ -37,6 +38,7 @@ export default function DownloadPage() {
   return (
     <>
       <PageHero
+        path="/download"
         label="Get the app"
         title="Free, on whatever you’ve got."
         lede="BPM is in beta on iPhone and Android, and works in any browser. It’s the same account everywhere."
@@ -71,6 +73,7 @@ export default function DownloadPage() {
           </div>
         </div>
       </Section>
+      <NextSteps links={['/how-it-works', '/faq']} />
     </>
   );
 }
