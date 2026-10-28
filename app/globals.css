@@ -62,9 +62,9 @@
 }
 
 @theme inline {
-  --font-display: 'Space Grotesk Variable', 'IBM Plex Sans Variable', system-ui, sans-serif;
-  --font-sans: 'IBM Plex Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, Menlo, monospace;
+  --font-display: var(--font-sg), system-ui, sans-serif;
+  --font-sans: var(--font-plex), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: var(--font-jb), ui-monospace, Menlo, monospace;
   --color-bg: var(--bg);
   --color-text: var(--text);
   --color-text-2: var(--text-2);

@@ -1,12 +1,14 @@
 import type { Metadata, Viewport } from 'next';
-import '@fontsource-variable/space-grotesk';
-import '@fontsource-variable/ibm-plex-sans';
-import '@fontsource-variable/jetbrains-mono';
+import localFont from 'next/font/local';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { JsonLd } from '@/components/JsonLd';
 import { SITE } from '@/lib/site';
+
+const display = localFont({ src: './fonts/SpaceGrotesk.woff2', variable: '--font-sg', weight: '300 700', display: 'swap' });
+const sans = localFont({ src: './fonts/IBMPlexSans.woff2', variable: '--font-plex', weight: '100 700', display: 'swap' });
+const mono = localFont({ src: './fonts/JetBrainsMono.woff2', variable: '--font-jb', weight: '100 800', display: 'swap', preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -65,7 +67,7 @@ const orgLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body className="min-h-dvh">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 btn btn-primary">
           Skip to content

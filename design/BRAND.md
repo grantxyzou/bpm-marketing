@@ -15,7 +15,7 @@ Tokens: `design/tokens.css`. Everything below comes from `grantxyzou/badminton-a
   - gap 0.11em, margin-left 0.06em, padding-bottom 0.05em
 - Everything is sized in em, so it scales from 20 to 96px. Dots use `var(--accent)`: #4ade80 dark, #16a34a light.
 - **Use it only as a standalone mark, never inline with other words** (the dots would read as an ellipsis). Headers elsewhere use plain text in Space Grotesk.
-- Grant once said he liked "bpm with the single dot" (old design chat). The app's live mark is the four-dot version. Ask him which to use.
+- **Decision (2026-10-28): the marketing site uses the arc-and-shuttle mark** (the app icon: `public/brand/bpm-trajectory.png`, `native/assets/icon.png`), redrawn as a flat SVG in `components/Logo.tsx`, beside a plain `bpm.` wordmark.
 - Rebuild it as an inline SVG or React component for the site. `public/brand/bpm-logo.svg` is an *older* lockup (a shuttlecock plus text in system fonts), so don't use it as the wordmark.
 
 ## Shuttlecock: `components/ShuttleIcon.tsx`, `public/brand/shuttlecock.svg`, `bpm-shuttlecock.png`

@@ -9,7 +9,7 @@ Source of truth: `grantxyzou/badminton-app` at `3cbb6f9` (2026-10-28). Every cla
 - From `PRODUCT.md`: *"Success is that the weekly ritual takes less effort than texting the group chat, and that settling up never feels like being invoiced by a company."*
 - A club is a roster, a weekly session and a cost split. **It is not a league, a venue-booking platform or a multi-sport app.** All three are explicit non-goals in `ROADMAP.md`.
 - **Naming:** the app is **BPM**. Grant's own club (group #1, Thursday nights in Vancouver) is **BPM Core**. Don't mix them up in copy (changelog 2026-10-22). The wordmark is lowercase `bpm.`.
-- **Where it runs:** https://bpm.grantzou.com/bpm (web, installable PWA), plus the **App Store and Google Play** (bundle id `com.motioncraft.bpm`), live since 2026-10-07.
+- **Where it runs:** https://bpm.grantzou.com/bpm (web, installable PWA), plus iOS and Android apps (bundle id `com.motioncraft.bpm`). **Per the owner (2026-10-28), both are in testing, not public:** TestFlight public beta for iOS and a Play internal test, which is invite-only, for Android.
 - **Price:** free. From the terms (`messages/en.json`, `legal.terms`): *"It's free today; if a paid plan is ever introduced it will be announced in the app first, and nothing you've already done becomes payable after the fact."* It's run by one volunteer operator in BC, Canada. `docs/plans/pricing.md` records that no pricing model is chosen (affiliate links, the stringing shop and a per-club tier are only options), with a review date of 2026-12-02.
 - **Scale today:** one live club of about 72 members (`docs/plans/pricing.md`). Multi-group went live 2026-10-22, so any organiser can now start their own club from the store app.
 
@@ -160,7 +160,7 @@ Bilingual matters to the users. The site's v1 is English-only (owner's decision,
 |---|---|
 | App URL | https://bpm.grantzou.com/bpm |
 | Legal pages | `/bpm/legal/privacy`, `/bpm/legal/terms`, `/bpm/legal/support`, `/bpm/legal/delete-account` (server-rendered in the app; link to them rather than duplicating) |
-| Store listings | Live on both stores since 2026-10-07. **The URLs aren't in the repo; the owner needs to provide them.** Bundle/package id `com.motioncraft.bpm`. |
+| Store listings | Testing only: TestFlight https://testflight.apple.com/join/y5nPzPEU, Play internal test https://play.google.com/apps/internaltest/4701333322627550006 (invite-only). Bundle/package id `com.motioncraft.bpm`. |
 | OG image | The app's `app/opengraph-image.tsx` is a dynamic card for **the club** (BPM Core), not the product. The marketing site needs its own. |
 | Pricing | Free. No tiers exist. |
 | Screenshot data | Mock mode, below |
