@@ -4,6 +4,7 @@ import { PageHero } from '@/components/PageHero';
 import { FeatureRow } from '@/components/FeatureRow';
 import { Section } from '@/components/Section';
 import { CallToAction } from '@/components/CallToAction';
+import { PromoVideo } from '@/components/PromoVideo';
 import { DETAILS, FEATURE_AREAS } from '@/content/en';
 
 export const metadata: Metadata = pageMeta('/features', 'Features', 'Sign-ups and waitlist, cost splitting and balances, restring requests, game stats and drills, racket fit, and organiser tools. Everything BPM does for a casual badminton club.');
@@ -24,6 +25,9 @@ export default function FeaturesPage() {
           ))}
         </nav>
       </PageHero>
+      <div className="container-site pb-6 pt-10">
+        <PromoVideo />
+      </div>
       <div className="container-site flex flex-col gap-8 pt-6">
         {FEATURE_AREAS.map((a, i) => (
           <FeatureRow key={a.id} area={a} flip={i % 2 === 1} headingLevel="h2" />

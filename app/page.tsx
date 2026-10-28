@@ -5,6 +5,7 @@ import { Section } from '@/components/Section';
 import { FeatureRow } from '@/components/FeatureRow';
 import { JsonLd } from '@/components/JsonLd';
 import { CallToAction } from '@/components/CallToAction';
+import { PromoVideo } from '@/components/PromoVideo';
 import { DETAILS, FAQ, FEATURE_AREAS, WEEK } from '@/content/en';
 import { SITE } from '@/lib/site';
 
@@ -113,6 +114,10 @@ export default function HomePage() {
             See how it works for players and organisers →
           </Link>
         </p>
+      </Section>
+
+      <Section id="video" label="See it in a minute" title="One week of BPM, start to finish." center>
+        <PromoVideo />
       </Section>
 
       {/* Features */}
