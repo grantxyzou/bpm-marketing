@@ -1,0 +1,118 @@
+/* BPM brand tokens for the marketing site.
+   Extracted from grantxyzou/badminton-app @ 3cbb6f9: app/globals.css (field hues, radii, easing)
+   and docs/design-system/colors_and_type.css (core palette, type). Dark is the default theme. */
+
+:root {
+  /* Core palette */
+  --bpm-court-green: #4ade80;       /* accent, dark */
+  --bpm-court-green-dark: #16a34a;  /* accent, light */
+  --bpm-green-deep: #15803d;
+  --bpm-forest-900: #050f07;
+  --bpm-forest-800: #0a1f0e;
+  --bpm-night: #100F0F;             /* page bg, dark; also native icon/splash bg */
+  --bpm-cream: #FAF8F5;             /* page bg, light */
+  --bpm-ink: #1a2332;               /* text, light */
+  --bpm-fog: #e2e8f0;               /* text, dark */
+
+  /* Semantic (always pair with an icon or label: color-blind rule in PRODUCT.md) */
+  --bpm-amber: #fbbf24;             /* waitlist, sign-ups opening */
+  --bpm-orange: #fb923c;            /* session full */
+  --bpm-red: #ef4444;               /* error */
+  --bpm-blue: #60a5fa;              /* info, dates */
+  --bpm-violet: #c4b5fd;            /* admin */
+
+  /* Theme-resolved */
+  --page-bg: var(--bpm-night);
+  --text-primary: var(--bpm-fog);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.35);
+  --accent: var(--bpm-court-green);
+  --divider: rgba(255, 255, 255, 0.05);
+
+  /* Per-tab "fields" (radial ground behind each app tab) */
+  --field-home:     radial-gradient(120% 70% at 78% 4%, rgba(74, 222, 128, 0.42), transparent 70%);
+  --field-stringing: radial-gradient(120% 70% at 78% 4%, rgba(251, 191, 36, 0.40), transparent 70%);
+  --field-stats:    radial-gradient(120% 70% at 78% 4%, rgba(96, 165, 250, 0.40), rgba(27, 50, 77, 0.30) 48%, transparent 74%);
+  --field-profile:  radial-gradient(120% 70% at 78% 4%, rgba(196, 181, 253, 0.38), transparent 70%);
+  --field-admin:    radial-gradient(120% 70% at 78% 4%, rgba(251, 146, 60, 0.40), transparent 70%);
+  --field-scrim:    linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.06) 42%, rgba(0, 0, 0, 0.12) 100%);
+
+  /* Glass material (Tier 1 card) */
+  --glass-tint: 255, 255, 255;
+  --glass-bg: linear-gradient(160deg, rgba(var(--glass-tint), 0.06) 0%, rgba(var(--glass-tint), 0.02) 100%);
+  --glass-border: rgba(var(--glass-tint), 0.14);
+  --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --glass-inset: rgba(var(--glass-tint), 0.14);
+  --glass-blur: 10px;
+  --glass-soft-bg: rgba(var(--glass-tint), 0.03);      /* Tier 2, nested only */
+  --glass-soft-border: rgba(var(--glass-tint), 0.06);
+
+  /* Buttons */
+  --btn-primary-bg: linear-gradient(160deg, rgba(74, 222, 128, 0.55) 0%, rgba(22, 163, 74, 0.4) 100%);
+  --btn-primary-border: rgba(74, 222, 128, 0.45);
+  --btn-primary-text: #fff;
+  --btn-ghost-bg: linear-gradient(160deg, rgba(var(--glass-tint), 0.08) 0%, rgba(var(--glass-tint), 0.03) 100%);
+  --btn-ghost-border: rgba(var(--glass-tint), 0.14);
+
+  /* Type trio */
+  --font-display: 'Space Grotesk', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+  --tracking-display: -0.02em;
+  --tracking-wordmark: -0.04em;
+  --tracking-label: 0.1em;          /* uppercase section labels */
+
+  /* Radii: 16px cap on rectangles; 30px only for cards sitting on a field */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;                /* buttons */
+  --radius-lg: 12px;                /* Tier-2, banners */
+  --radius-xl: 16px;                /* Tier-1 card: MAX */
+  --radius-3xl: 30px;               /* field card only */
+  --radius-pill: 100px;
+
+  /* Motion: "motion confirms, never performs" */
+  --ease-glass: cubic-bezier(0.23, 1, 0.32, 1);       /* default */
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-sheet: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);   /* overshoot: rare surfaces only */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --page-bg: var(--bpm-cream);
+  --text-primary: var(--bpm-ink);
+  --text-secondary: rgba(0, 0, 0, 0.62);
+  --text-muted: rgba(0, 0, 0, 0.50);
+  --accent: var(--bpm-court-green-dark);
+  --divider: rgba(0, 0, 0, 0.06);
+
+  --field-home:     radial-gradient(120% 70% at 78% 4%, rgba(22, 163, 74, 0.16), transparent 70%);
+  --field-stringing: radial-gradient(120% 70% at 78% 4%, rgba(217, 119, 6, 0.13), transparent 70%);
+  --field-stats:    radial-gradient(120% 70% at 78% 4%, rgba(96, 165, 250, 0.18), transparent 70%);
+  --field-profile:  radial-gradient(120% 70% at 78% 4%, rgba(167, 139, 250, 0.16), transparent 70%);
+  --field-admin:    radial-gradient(120% 70% at 78% 4%, rgba(234, 88, 12, 0.12), transparent 70%);
+  --field-scrim:    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 42%, rgba(255, 255, 255, 0.14) 100%);
+
+  --glass-tint: 0, 0, 0;
+  --glass-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.55) 100%);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  --glass-inset: rgba(255, 255, 255, 0.5);
+  --glass-blur: 16px;
+
+  --btn-primary-bg: linear-gradient(160deg, #22c55e 0%, #16a34a 100%);
+  --btn-primary-border: rgba(22, 163, 74, 0.3);
+
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* PRODUCT.md: movement dies, comprehension survives. Keep opacity/color transitions. */
+  :root { --duration-fast: 0ms; --duration-normal: 0ms; --duration-slow: 0ms; }
+}
