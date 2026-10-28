@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/SiteLink';
 
 const PAGES = {
   '/': { title: 'Home', blurb: 'The short version of what BPM does.' },

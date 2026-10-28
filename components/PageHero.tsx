@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/SiteLink';
 import type { Hue } from '@/content/en';
 import { JsonLd } from './JsonLd';
 import { SITE } from '@/lib/site';

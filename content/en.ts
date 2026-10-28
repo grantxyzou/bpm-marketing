@@ -7,21 +7,30 @@ export const WEEK = [
   {
     step: '01',
     title: 'Sign-ups open',
+    screen: '/media/screens/home-signup.webp',
+    alt: 'BPM Home screen with the session time, venue and a Sign up button',
     body: 'Your organiser opens the week. You see the time, the place and the cost per person, plus a nudge if you’ve turned notifications on.',
   },
   {
     step: '02',
     title: 'Tap Join',
+    screen: '/media/screens/roster-waitlist.webp',
+    alt: 'BPM roster with numbered players and a waitlist below',
     body: 'You get a numbered spot on the roster. If it’s full, you’re on the waitlist, in order, and you can see exactly where you stand.',
   },
   {
     step: '03',
     title: 'Play',
+    screen: '/media/screens/balance.webp',
+    alt: 'BPM sign-up confirmation with a link to cancel your spot',
     body: 'Can’t make it after all? Cancel your own spot and the next person on the waitlist can move up.',
   },
   {
     step: '04',
     title: 'Send the bill',
+    screen: '/media/screens/admin-send-the-bill.webp',
+    alt: 'BPM organiser view after sending the bill, showing the cost per player',
+    caption: 'What the organiser sees',
     body: 'Court and shuttles are split across whoever played. You see your share, pay your organiser the way you already do, and tap “I’ve sent it”.',
   },
 ] as const;
