@@ -13,6 +13,9 @@ bpm. is a badminton group management app: weekly session sign-ups with caps and 
 - Language: English only for v1. Structure the copy so zh-CN can be added later.
 - Video: both the hero loop and the promo.
 - Main call to action: "Get the app". The apps are in testing, not public, so the buttons link to the TestFlight and Play testing links (owner to supply) and are labelled as a beta. The store badges come later.
+  - iOS (TestFlight, public): https://testflight.apple.com/join/y5nPzPEU
+  - Android (Play internal test, invite-only; only works for testers on the list): https://play.google.com/apps/internaltest/4701333322627550006
+- AI features: no API key, so they stay out of screenshots and video and are described in text only.
 - Logo: the arc-and-shuttle mark (app icon; `badminton-app/public/brand/bpm-trajectory.png`, `native/assets/icon.png`). Get it as SVG or high-resolution for the site.
 - Public content: no e-transfer matching, no real club facts, no member quotes. Use generic demo data in every screenshot and video.
 
