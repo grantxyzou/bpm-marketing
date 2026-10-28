@@ -10,6 +10,22 @@ const FRAME =
 type Step = (typeof WEEK)[number];
 const captionOf = (s: Step) => ('caption' in s ? s.caption : undefined);
 
+/** One app screen that, while playing, eases in on the part of the screen the step is about and pulses a tap marker there. */
+function Screen({ step, playing, sizes, alt, className = '' }: { step: Step; playing: boolean; sizes: string; alt: string; className?: string }) {
+  const vars = {
+    '--fx': `${step.focus[0]}%`,
+    '--fy': `${step.focus[1]}%`,
+    '--tx': `${step.tap[0]}%`,
+    '--ty': `${step.tap[1]}%`,
+  } as React.CSSProperties;
+  return (
+    <div className={`screen-anim ${playing ? 'is-playing' : ''} ${className}`} style={vars} aria-hidden={alt ? undefined : true}>
+      <Image src={step.screen} alt={alt} fill sizes={sizes} className="object-cover object-top" />
+      <span className="tap-ring" aria-hidden="true" />
+    </div>
+  );
+}
+
 export function WeekStory() {
   const [active, setActive] = useState(0);
   const steps = useRef<(HTMLLIElement | null)[]>([]);
@@ -53,7 +69,7 @@ export function WeekStory() {
             <figure className="flex flex-col items-center gap-2 md:hidden">
               <div className={`${FRAME} max-w-[260px]`}>
                 <div className="relative aspect-[390/844] overflow-hidden rounded-[34px] bg-[#100f0f]">
-                  <Image src={s.screen} alt={s.alt} fill sizes="260px" className="object-cover object-top" />
+                  <Screen step={s} playing={i === active} sizes="260px" alt={s.alt} />
                 </div>
               </div>
               {captionOf(s) && <figcaption className="text-sm text-text-3">{captionOf(s)}</figcaption>}
@@ -68,14 +84,13 @@ export function WeekStory() {
             <div className={FRAME} style={{ width: 'min(360px, calc((100vh - 9rem) * 0.462))' }}>
               <div className="relative aspect-[390/844] overflow-hidden rounded-[34px] bg-[#100f0f]">
                 {WEEK.map((s, i) => (
-                  <Image
+                  <Screen
                     key={s.screen}
-                    src={s.screen}
-                    alt={i === active ? s.alt : ''}
-                    aria-hidden={i !== active}
-                    fill
+                    step={s}
+                    playing={i === active}
                     sizes="360px"
-                    className={`week-shot object-cover object-top ${i === active ? 'opacity-100' : 'opacity-0'}`}
+                    alt={i === active ? s.alt : ''}
+                    className={`week-shot ${i === active ? 'opacity-100' : 'opacity-0'}`}
                   />
                 ))}
               </div>

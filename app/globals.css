@@ -302,6 +302,76 @@ p {
   transition: opacity 320ms var(--ease-glass);
 }
 
+/* Inside the phone: ease in on what the step is about, pulse a tap there, ease back out. */
+.screen-anim {
+  position: absolute;
+  inset: 0;
+  transform-origin: var(--fx) var(--fy);
+}
+
+.tap-ring {
+  position: absolute;
+  left: var(--tx);
+  top: var(--ty);
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: rgba(74, 222, 128, 0.3);
+  box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.15);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .screen-anim.is-playing {
+    animation: screen-focus 5.5s var(--ease-glass) 0.3s infinite;
+  }
+
+  .screen-anim.is-playing .tap-ring {
+    animation: screen-tap 5.5s ease-out 0.3s infinite;
+  }
+}
+
+@keyframes screen-focus {
+  0%,
+  10% {
+    transform: scale(1);
+  }
+  34%,
+  74% {
+    transform: scale(1.32);
+  }
+  94%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes screen-tap {
+  0%,
+  38% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  44% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  52% {
+    opacity: 0.9;
+    transform: scale(0.9);
+  }
+  62% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 /* The phone zooms in as the story enters and eases back as it leaves. */
 .week-story {
   view-timeline-name: --week;
