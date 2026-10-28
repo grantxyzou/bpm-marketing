@@ -112,7 +112,3 @@
   color-scheme: light;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  /* PRODUCT.md: movement dies, comprehension survives. Keep opacity/color transitions. */
-  :root { --duration-fast: 0ms; --duration-normal: 0ms; --duration-slow: 0ms; }
-}
