@@ -12,6 +12,9 @@ bpm. is a badminton group management app: weekly session sign-ups with caps and 
 - Domain: `www.motioncraft-bpm.com` (apex redirects to www). Already registered; point its DNS at Vercel at launch. Use the Vercel URL until then.
 - Language: English only for v1. Structure the copy so zh-CN can be added later.
 - Video: both the hero loop and the promo.
+- Main call to action: "Get the app". The apps are in testing, not public, so the buttons link to the TestFlight and Play testing links (owner to supply) and are labelled as a beta. The store badges come later.
+- Logo: the arc-and-shuttle mark (app icon; `badminton-app/public/brand/bpm-trajectory.png`, `native/assets/icon.png`). Get it as SVG or high-resolution for the site.
+- Public content: no e-transfer matching, no real club facts, no member quotes. Use generic demo data in every screenshot and video.
 
 ## Phase 1: Understand the app (before writing any site code)
 1. Read the app repo: README, routes/screens, data models, API, auth, payments, notifications.
