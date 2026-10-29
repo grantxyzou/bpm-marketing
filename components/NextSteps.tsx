@@ -4,6 +4,7 @@ const PAGES = {
   '/': { title: 'Home', blurb: 'The short version of what BPM does.' },
   '/features': { title: 'Features', blurb: 'Sign-ups, money, stringing, stats, gear and organiser tools.' },
   '/organisers': { title: 'For organisers', blurb: 'Start a club and run the weekly session.' },
+  '/stringers': { title: 'For stringers', blurb: 'A bench, a string shelf and bills players already check.' },
   '/how-it-works': { title: 'How it works', blurb: 'A week in BPM, for players and organisers.' },
   '/download': { title: 'Get the app', blurb: 'iPhone and Android betas, or the browser.' },
   '/faq': { title: 'FAQ', blurb: 'Price, payments, languages and your data.' },

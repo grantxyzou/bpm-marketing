@@ -57,3 +57,18 @@ node record-week.mjs b    # step-4 the bill arrives, tap "I've sent it"
 - `step-N-first.webp` and `step-N-last.webp` are the first and last frames, for posters and reduced motion.
 - Run `a` seeds 12 players plus two on the waitlist, then removes one placeholder player so Lin's sign-up takes the last spot with the waitlist already showing. The API ignores `waitlist: true` while there's room, which is why it fills first.
 - The waitlist doesn't move up after Lin cancels: in the app, the organiser promotes from the waitlist.
+
+## Stringing screens (`capture-stringing.mjs`)
+
+For the `/stringers` page. Fresh dev server (step 2 above), then:
+
+```bash
+node capture-stringing.mjs                    # all five
+node capture-stringing.mjs stringer-shelf     # only re-save the named screens
+```
+
+- **Seeding:** opens the shop, sets prices and four shelf strings, and logs stock so the shelf shows In stock, Low ("3 sets left") and Out ("None left"). Six jobs across every status, one due today, one a day late, one pinned. Players are the seed's demo names.
+- **`stringing-tracking`** is Lin's own Stringing card, expanded ("Being strung · $24–28"). It is captured **before** Lin gets "Can string", because someone who can string is shown the stringer view instead.
+- **`stringer-assigned`**: Lin gets "Can string" (not admin) and two jobs are assigned to her. She sees "Rackets to string · Assigned to you" with status buttons and no prices.
+- **`stringer-bench`**, **`stringer-intake`** (Add job for Akane, with "Akane's strings" suggestions and tension) and **`stringer-shelf`** ("Strings, stock, prices & holes") are the admin's views.
+- A job `PATCH` must include the job's `memberId` (the store's partition key).
