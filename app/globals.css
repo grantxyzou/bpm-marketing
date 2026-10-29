@@ -335,6 +335,73 @@ p {
   }
 }
 
+/* Stringers page: arrows and rules drawn as strings, which twang on hover. */
+.string-rule {
+  position: relative;
+}
+
+.string-rule::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: var(--amber);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'%3E%3Cpath d='M4 0q4 3 0 6t0 6' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") repeat-y;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'%3E%3Cpath d='M4 0q4 3 0 6t0 6' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") repeat-y;
+  transform-origin: center;
+}
+
+.string-rule-muted::before {
+  background: var(--text-3);
+  opacity: 0.6;
+}
+
+.string-arrow {
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .string-rule:hover::before {
+    animation: string-twang-x 520ms var(--ease-glass);
+  }
+
+  li:hover > .string-arrow {
+    animation: string-twang-y 520ms var(--ease-glass);
+  }
+}
+
+@keyframes string-twang-x {
+  20% {
+    transform: scaleX(1.9);
+  }
+  40% {
+    transform: scaleX(-1.2);
+  }
+  60% {
+    transform: scaleX(1.4);
+  }
+  80% {
+    transform: scaleX(-0.8);
+  }
+}
+
+@keyframes string-twang-y {
+  20% {
+    transform: scaleY(1.9);
+  }
+  40% {
+    transform: scaleY(-1.2);
+  }
+  60% {
+    transform: scaleY(1.4);
+  }
+  80% {
+    transform: scaleY(-0.8);
+  }
+}
+
 details > summary {
   list-style: none;
   cursor: pointer;

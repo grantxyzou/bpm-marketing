@@ -17,6 +17,34 @@ export const metadata: Metadata = pageMeta(
 // The job statuses exactly as the app names them (lib/stringing.ts).
 const STATUSES = ['Requested', 'Received', 'Strung', 'Ready', 'Picked up'];
 
+// Each connector is strung a little differently: length, wave height and wave spacing (px).
+const STRINGS = [
+  { len: 38, amp: 4.5, wave: 5 },
+  { len: 28, amp: 2.5, wave: 7 },
+  { len: 46, amp: 4.5, wave: 6 },
+  { len: 32, amp: 3.5, wave: 9 },
+];
+const H = 16;
+
+function StringArrow({ len, amp, wave }: (typeof STRINGS)[number]) {
+  const mid = H / 2;
+  const end = len - 6;
+  const halves = Math.max(2, Math.round((end - 1) / (wave / 2)));
+  const step = (end - 1) / halves;
+  let d = `M1 ${mid}`;
+  for (let k = 0; k < halves; k++) {
+    const x = 1 + step * (k + 1);
+    const peak = k % 2 === 0 ? mid - amp : mid + amp;
+    d += ` Q${(x - step / 2).toFixed(2)} ${peak} ${x.toFixed(2)} ${mid}`;
+  }
+  return (
+    <svg width={len} height={H} viewBox={`0 0 ${len} ${H}`} aria-hidden="true" className="string-arrow shrink-0 text-[var(--amber)]">
+      <path d={d} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d={`M${len - 5} ${mid - 4}l4 4-4 4`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 type Media = { kind: 'img'; src: string; alt: string } | { kind: 'due' } | { kind: 'notify' };
 
 const BENCH: { t: string; b: string; media: Media }[] = [
@@ -139,9 +167,7 @@ export default function StringersPage() {
                 {s}
               </span>
               {i < STATUSES.length - 1 && (
-                <svg width="18" height="10" viewBox="0 0 18 10" aria-hidden="true" className="text-text-3">
-                  <path d="M0 5h15M11 1l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                </svg>
+                <StringArrow {...STRINGS[i]} />
               )}
             </li>
           ))}
@@ -165,7 +191,7 @@ export default function StringersPage() {
         <div className="grid items-center gap-12 md:grid-cols-[1.2fr_1fr]">
           <ul className="flex flex-col gap-6">
             {SHELF.map((x) => (
-              <li key={x.t} className="border-l-2 border-[var(--amber)] pl-5">
+              <li key={x.t} className="string-rule pl-6">
                 <h3 className="text-xl font-semibold">{x.t}</h3>
                 <p className="mt-1 text-text-2">{x.b}</p>
               </li>
@@ -200,14 +226,14 @@ export default function StringersPage() {
       <Section label="Who does what" hue="amber" title="Stringers string. Organisers handle the money.">
         <div className="grid items-center gap-12 md:grid-cols-[1.2fr_1fr]">
           <div className="flex flex-col gap-8">
-            <div className="border-l-2 border-[var(--amber)] pl-5">
+            <div className="string-rule pl-6">
               <h3 className="text-xl font-semibold">Stringers</h3>
               <p className="mt-1.5 text-text-2">
                 An organiser ticks “Can string” on a member. They see the rackets assigned to them and move jobs along. No prices, no
                 payments, and no other admin tools.
               </p>
             </div>
-            <div className="border-l-2 border-divider pl-5">
+            <div className="string-rule string-rule-muted pl-6">
               <h3 className="text-xl font-semibold">Organisers</h3>
               <p className="mt-1.5 text-text-2">
                 Open or close the shop, run the full bench, set prices and the shelf, and mark jobs paid. Until the shop is open, players
