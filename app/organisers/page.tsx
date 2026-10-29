@@ -31,7 +31,7 @@ const TOOLS = [
   { t: 'Shuttle stock', b: 'Log what you buy and what each session uses, and see how long the stock will last.' },
   { t: 'Late-cancel policy', b: 'Optional. Set a window, and late cancels are flagged for you. Nothing is charged automatically.' },
   { t: 'Announcements', b: 'Write the week’s note, and tidy it up with AI if you like. You always see it before players do.' },
-  { t: 'Stringing bench', b: 'If you string, run a queue with intake, prices and a string shelf, and mark jobs ready.' },
+  { t: 'Stringing bench', b: 'If someone in your club strings, run a queue with intake, prices and a string shelf. More on the stringers page.' },
 ];
 
 export default function OrganisersPage() {

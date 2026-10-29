@@ -6,6 +6,8 @@ const PAGES: { path: string; lastModified: string; priority: number }[] = [
   { path: '', lastModified: '2026-10-28', priority: 1 },
   { path: '/features', lastModified: '2026-10-28', priority: 0.8 },
   { path: '/organisers', lastModified: '2026-10-28', priority: 0.8 },
+
+  { path: '/stringers', lastModified: '2026-10-28', priority: 0.8 },
   { path: '/how-it-works', lastModified: '2026-10-28', priority: 0.8 },
   { path: '/download', lastModified: '2026-10-28', priority: 0.8 },
   { path: '/faq', lastModified: '2026-10-28', priority: 0.8 },

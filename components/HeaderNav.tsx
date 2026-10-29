@@ -22,7 +22,7 @@ export function HeaderNav() {
 
   return (
     <>
-      <nav aria-label="Main" className="hidden items-center gap-7 md:flex">
+      <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
         {NAV.map((item) => {
           const current = isCurrent(pathname, item.href);
           return (
@@ -30,7 +30,7 @@ export function HeaderNav() {
               key={item.href}
               href={item.href}
               aria-current={current ? 'page' : undefined}
-              className={`relative text-[15px] transition-colors hover:text-text ${
+              className={`relative whitespace-nowrap text-[15px] transition-colors hover:text-text ${
                 current ? 'text-text after:absolute after:inset-x-0 after:-bottom-[21px] after:h-0.5 after:bg-[var(--accent)]' : 'text-text-2'
               }`}
             >
@@ -42,7 +42,7 @@ export function HeaderNav() {
           Get the app
         </Link>
       </nav>
-      <details ref={menu} className="relative md:hidden">
+      <details ref={menu} className="relative lg:hidden">
         <summary className="btn btn-ghost min-h-10 px-3 text-[15px]" aria-label="Open menu">
           Menu
         </summary>
