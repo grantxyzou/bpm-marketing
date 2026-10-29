@@ -125,23 +125,25 @@ export default function StringersPage() {
       </Section>
 
       <Section label="Who does what" hue="amber" title="Stringers string. Organisers handle the money.">
-        <div className="grid items-start gap-10 md:grid-cols-[1fr_1fr_auto]">
-          <div className="border-t border-divider pt-5">
-            <h3 className="text-lg font-semibold">Stringers</h3>
-            <p className="mt-1.5 text-[15px] text-text-2">
-              An organiser ticks “Can string” on a member. They see the rackets assigned to them and move jobs along. No prices, no
-              payments, and no other admin tools.
-            </p>
+        <div className="grid items-center gap-12 md:grid-cols-[1.2fr_1fr]">
+          <div className="flex flex-col gap-8">
+            <div className="border-l-2 border-[var(--amber)] pl-5">
+              <h3 className="text-xl font-semibold">Stringers</h3>
+              <p className="mt-1.5 text-text-2">
+                An organiser ticks “Can string” on a member. They see the rackets assigned to them and move jobs along. No prices, no
+                payments, and no other admin tools.
+              </p>
+            </div>
+            <div className="border-l-2 border-divider pl-5">
+              <h3 className="text-xl font-semibold">Organisers</h3>
+              <p className="mt-1.5 text-text-2">
+                Open or close the shop, run the full bench, set prices and the shelf, and mark jobs paid. Until the shop is open, players
+                see “Coming soon”.
+              </p>
+            </div>
           </div>
-          <div className="border-t border-divider pt-5">
-            <h3 className="text-lg font-semibold">Organisers</h3>
-            <p className="mt-1.5 text-[15px] text-text-2">
-              Open or close the shop, run the full bench, set prices and the shelf, and mark jobs paid. Until the shop is open, players
-              see “Coming soon”.
-            </p>
-          </div>
-          <figure className="flex flex-col items-center gap-2">
-            <Phone src="/media/screens/stringer-assigned.webp" alt="A stringer’s view in BPM: rackets assigned to them, with Mark received and Mark ready, and no prices" className="max-w-[220px]" />
+          <figure className="flex flex-col items-center gap-3">
+            <Phone src="/media/screens/stringer-assigned.webp" alt="A stringer’s view in BPM: rackets assigned to them, with Mark received and Mark ready, and no prices" className="max-w-[280px]" />
             <figcaption className="text-sm text-text-3">What a stringer sees</figcaption>
           </figure>
         </div>
