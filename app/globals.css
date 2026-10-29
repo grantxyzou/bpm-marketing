@@ -241,6 +241,100 @@ p {
   aspect-ratio: 100 / 220;
 }
 
+/* Hero depth: the court etching trails the page as it scrolls. Scroll-driven, no JS. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .hero-depth {
+      animation: hero-depth linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 90vh;
+    }
+  }
+}
+
+@keyframes hero-depth {
+  to {
+    transform: translateY(18%);
+    opacity: 0.45;
+  }
+}
+
+/* Page transitions: in-site links cross-fade; browser Back carries no type and stays instant. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(.page-fade) {
+  animation: 120ms ease-in both vt-fade reverse;
+}
+
+::view-transition-new(.page-fade) {
+  animation:
+    220ms var(--ease-glass) 80ms both vt-fade,
+    220ms var(--ease-glass) 80ms both vt-rise;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-rise {
+  from {
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(.page-fade) {
+    animation: 160ms ease-out both vt-fade;
+  }
+}
+
+/* Week story: the phone holds still while the steps scroll past it. */
+.week-shot {
+  transition: opacity 320ms var(--ease-glass);
+}
+
+/* The phone zooms in as the story enters and eases back as it leaves. */
+.week-story {
+  view-timeline-name: --week;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .week-zoom {
+      animation: week-zoom linear both;
+      animation-timeline: --week;
+    }
+  }
+}
+
+@keyframes week-zoom {
+  entry 10% {
+    transform: scale(0.78) translateY(6%);
+    opacity: 0.5;
+  }
+  entry 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  exit 0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  exit 60% {
+    transform: scale(0.88);
+    opacity: 0.6;
+  }
+}
+
 details > summary {
   list-style: none;
   cursor: pointer;

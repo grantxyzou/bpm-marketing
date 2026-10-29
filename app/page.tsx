@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/SiteLink';
 import { HeroVideo } from '@/components/HeroVideo';
 import { GetTheApp } from '@/components/GetTheApp';
 import { Section } from '@/components/Section';
@@ -6,7 +6,8 @@ import { FeatureRow } from '@/components/FeatureRow';
 import { JsonLd } from '@/components/JsonLd';
 import { CallToAction } from '@/components/CallToAction';
 import { PromoVideo } from '@/components/PromoVideo';
-import { DETAILS, FAQ, FEATURE_AREAS, WEEK } from '@/content/en';
+import { WeekStory } from '@/components/WeekStory';
+import { DETAILS, FAQ, FEATURE_AREAS } from '@/content/en';
 import { SITE } from '@/lib/site';
 
 const CHAT = [
@@ -52,7 +53,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="relative flex justify-center">
-            <div className="court-lines pointer-events-none absolute left-1/2 top-1/2 h-[118%] -translate-x-1/2 -translate-y-1/2" aria-hidden="true" />
+            <div className="court-lines hero-depth pointer-events-none absolute left-1/2 top-1/2 h-[118%] -translate-x-1/2 -translate-y-1/2" aria-hidden="true" />
             <HeroVideo />
           </div>
         </div>
@@ -100,15 +101,7 @@ export default function HomePage() {
         title="Four steps, the same every week."
         lede="Nothing to learn. If you’ve ever replied “in” to a group chat, you already know how it works."
       >
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {WEEK.map((s) => (
-            <li key={s.step} className="glass flex flex-col gap-3 p-6">
-              <span className="mono text-sm text-accent">{s.step}</span>
-              <h3 className="text-xl font-semibold">{s.title}</h3>
-              <p className="text-[15px] text-text-2">{s.body}</p>
-            </li>
-          ))}
-        </ol>
+        <WeekStory />
         <p className="mt-8">
           <Link href="/how-it-works" className="text-accent underline-offset-4 hover:underline">
             See how it works for players and organisers →
