@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { pageMeta } from '@/lib/meta';
 import { PageHero } from '@/components/PageHero';
 import { NextSteps } from '@/components/NextSteps';
@@ -16,16 +17,39 @@ export const metadata: Metadata = pageMeta(
 // The job statuses exactly as the app names them (lib/stringing.ts).
 const STATUSES = ['Requested', 'Received', 'Strung', 'Ready', 'Picked up'];
 
-const BENCH = [
+type Media = { kind: 'img'; src: string; alt: string } | { kind: 'due' } | { kind: 'notify' };
+
+const BENCH: { t: string; b: string; media: Media }[] = [
   {
     t: 'Every racket on one bench',
     b: 'Jobs move from Requested to Picked up, one tap at a time, with Undo if you tap the wrong one. Switch between your jobs and everyone’s.',
+    media: { kind: 'img', src: '/media/crops/bench-list.webp', alt: 'Two jobs on the BPM stringing bench with their status and due date, under a Mine / All switch' },
   },
-  { t: 'Due dates you can see', b: 'Each job has a “Ready by” date, and the bench flags what’s due today, tomorrow or running late.' },
-  { t: 'Walk-ups welcome', b: 'Start a new job for any member. BPM suggests the racket and string from their last job and what’s in their bag.' },
-  { t: 'Tension, done properly', b: 'Mains and crosses set separately, from 18 to 32 lb, with the stringing method and the racket’s hole count.' },
-  { t: 'Share the work', b: 'Assign a job to a stringer, or let a stringer claim it with “Take this one”. Pin what’s urgent; archive what’s done.' },
-  { t: 'Players hear when it’s ready', b: 'A push notification and an email when their racket is being strung and when it’s ready to pick up.' },
+  {
+    t: 'Due dates you can see',
+    b: 'Each job has a “Ready by” date, and the bench flags what’s due today, tomorrow or running late.',
+    media: { kind: 'due' },
+  },
+  {
+    t: 'Walk-ups welcome',
+    b: 'Start a new job for any member. BPM suggests the racket and string from their last job and what’s in their bag.',
+    media: { kind: 'img', src: '/media/crops/intake-suggest.webp', alt: 'BPM suggesting a player’s strings: the last job here and the string in their bag' },
+  },
+  {
+    t: 'Tension, done properly',
+    b: 'Mains and crosses set separately, from 18 to 32 lb, with the stringing method and the racket’s hole count.',
+    media: { kind: 'img', src: '/media/crops/intake-tension.webp', alt: 'BPM tension control set to 26 lb for the mains' },
+  },
+  {
+    t: 'Share the work',
+    b: 'Assign a job to a stringer, or let a stringer claim it with “Take this one”. Pin what’s urgent; archive what’s done.',
+    media: { kind: 'img', src: '/media/crops/assigned-job.webp', alt: 'A job assigned to a stringer in BPM, with a Mark received button' },
+  },
+  {
+    t: 'Players hear when it’s ready',
+    b: 'A push notification and an email when their racket is being strung and when it’s ready to pick up.',
+    media: { kind: 'notify' },
+  },
 ];
 
 const SHELF = [
@@ -41,6 +65,56 @@ const PLAYER = [
   { t: 'Follow the job', b: 'Waiting for your racket, with the stringer, being strung, ready for you, picked up.' },
   { t: 'A nudge to restring', b: 'Eight weeks after a restring, a gentle reminder that it might be time again.' },
 ];
+
+// Due labels and notification text are the app's own wording (admin.stringing.due.*, lib/pushMessages.ts).
+function TileMedia({ media }: { media: Media }) {
+  if (media.kind === 'img') {
+    return (
+      <Image
+        src={media.src}
+        alt={media.alt}
+        width={780}
+        height={400}
+        sizes="(min-width: 1024px) 340px, 90vw"
+        className="h-auto max-h-full w-auto max-w-full rounded-xl object-contain"
+      />
+    );
+  }
+  if (media.kind === 'due') {
+    return (
+      <ul className="flex w-full max-w-[260px] flex-col gap-2" aria-label="Due labels on the bench">
+        {[
+          ['Carolina', '1 day late', '#fca5a5'],
+          ['Viktor', 'Today', '#fbbf24'],
+          ['Lin', 'Tomorrow', '#fbbf24'],
+        ].map(([n, d, c]) => (
+          <li key={n} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-[14px] text-[#e8ecf1]">
+            <span>{n}</span>
+            <span className="font-semibold" style={{ color: c }}>
+              {d}
+            </span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  return (
+    <ul className="flex w-full max-w-[280px] flex-col gap-2" aria-label="Notifications a player gets">
+      {[
+        ['On the machine', 'Astrox 88D Pro is being strung. Ready by Thu.'],
+        ['Your racket is ready', 'Astrox 88D Pro — ready to pick up.'],
+      ].map(([t, b]) => (
+        <li key={t} className="flex gap-3 rounded-2xl bg-white/[0.08] p-3 text-[#e8ecf1]">
+          <Image src="/icon.png" alt="" width={36} height={36} className="h-9 w-9 shrink-0 rounded-lg" />
+          <div className="min-w-0">
+            <p className="text-[13px] font-semibold leading-tight">{t}</p>
+            <p className="mt-0.5 text-[12.5px] leading-snug text-white/70">{b}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function StringersPage() {
   return (
@@ -72,20 +146,19 @@ export default function StringersPage() {
             </li>
           ))}
         </ol>
-        <div className="grid items-start gap-12 lg:grid-cols-[1fr_1.5fr]">
-          <div className="flex justify-center gap-4 lg:sticky lg:top-24">
-            <Phone src="/media/screens/stringer-bench.webp" alt="BPM stringing bench with jobs at different stages and due dates" className="max-w-[240px]" />
-            <Phone src="/media/screens/stringer-intake.webp" alt="BPM new stringing job with racket, string and mains and crosses tension" className="mt-12 hidden max-w-[240px] sm:block" />
-          </div>
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {BENCH.map((x) => (
-              <li key={x.t} className="glass p-5">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {BENCH.map((x) => (
+            <li key={x.t} className="glass flex flex-col overflow-hidden">
+              <div className="flex h-[200px] items-center justify-center bg-[#141210] p-4">
+                <TileMedia media={x.media} />
+              </div>
+              <div className="p-5">
                 <h3 className="text-lg font-semibold">{x.t}</h3>
                 <p className="mt-1.5 text-[15px] text-text-2">{x.b}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <Section label="Your shelf" hue="amber" title="Know what’s on the reel before someone asks.">
