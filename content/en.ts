@@ -33,8 +33,7 @@ export const WEEK = [
     title: 'Send the bill',
     screen: '/media/screens/admin-send-the-bill.webp',
     clip: '/media/week/step-4',
-    alt: 'BPM organiser view after sending the bill, showing the cost per player',
-    caption: 'What the organiser sees',
+    alt: 'BPM balance showing a $15 share and an I’ve sent it button being tapped',
     body: 'Court and shuttles are split across whoever played. You see your share, pay your organiser the way you already do, and tap “I’ve sent it”.',
   },
 ] as const;

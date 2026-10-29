@@ -7,7 +7,6 @@ const FRAME =
   'relative w-full rounded-[44px] border border-[rgba(255,255,255,0.14)] bg-[#0b0b0b] p-[10px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]';
 
 type Step = (typeof WEEK)[number];
-const captionOf = (s: Step) => ('caption' in s ? s.caption : undefined);
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
 function seek(v: HTMLVideoElement | null, progress: number) {
@@ -22,7 +21,7 @@ function Clip({ step, videoRef, label }: { step: Step; videoRef: (el: HTMLVideoE
     <video
       ref={videoRef}
       className="absolute inset-0 h-full w-full object-cover object-top"
-      poster={step.screen}
+      poster={`${step.clip}-first.webp`}
       muted
       playsInline
       preload="none"
@@ -48,6 +47,13 @@ export function WeekStory() {
     if (!rootEl) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const all = () => [...inline.current, ...stuck.current].filter(Boolean) as HTMLVideoElement[];
+
+    if (reduce) {
+      // No scrubbing: show each step's finished state.
+      WEEK.forEach((s, i) => {
+        [inline.current[i], stuck.current[i]].forEach((v) => v && (v.poster = `${s.clip}-last.webp`));
+      });
+    }
 
     let loaded = false;
     const loader = new IntersectionObserver(
@@ -144,7 +150,6 @@ export function WeekStory() {
                   />
                 </div>
               </div>
-              {captionOf(s) && <figcaption className="text-sm text-text-3">{captionOf(s)}</figcaption>}
             </figure>
           </li>
         ))}
@@ -168,9 +173,6 @@ export function WeekStory() {
                 ))}
               </div>
             </div>
-            <figcaption className="h-5 text-sm text-text-3" aria-live="polite">
-              {captionOf(WEEK[active]) ?? ''}
-            </figcaption>
           </figure>
         </div>
       </div>
