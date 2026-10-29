@@ -17,6 +17,34 @@ export const metadata: Metadata = pageMeta(
 // The job statuses exactly as the app names them (lib/stringing.ts).
 const STATUSES = ['Requested', 'Received', 'Strung', 'Ready', 'Picked up'];
 
+// Each connector is strung a little differently: length, wave height and wave spacing (px).
+const STRINGS = [
+  { len: 38, amp: 4.5, wave: 5 },
+  { len: 28, amp: 2.5, wave: 7 },
+  { len: 46, amp: 4.5, wave: 6 },
+  { len: 32, amp: 3.5, wave: 9 },
+];
+const H = 16;
+
+function StringArrow({ len, amp, wave }: (typeof STRINGS)[number]) {
+  const mid = H / 2;
+  const end = len - 6;
+  const halves = Math.max(2, Math.round((end - 1) / (wave / 2)));
+  const step = (end - 1) / halves;
+  let d = `M1 ${mid}`;
+  for (let k = 0; k < halves; k++) {
+    const x = 1 + step * (k + 1);
+    const peak = k % 2 === 0 ? mid - amp : mid + amp;
+    d += ` Q${(x - step / 2).toFixed(2)} ${peak} ${x.toFixed(2)} ${mid}`;
+  }
+  return (
+    <svg width={len} height={H} viewBox={`0 0 ${len} ${H}`} aria-hidden="true" className="string-arrow shrink-0 text-[var(--amber)]">
+      <path d={d} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d={`M${len - 5} ${mid - 4}l4 4-4 4`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 type Media = { kind: 'img'; src: string; alt: string } | { kind: 'due' } | { kind: 'notify' };
 
 const BENCH: { t: string; b: string; media: Media }[] = [
@@ -139,10 +167,7 @@ export default function StringersPage() {
                 {s}
               </span>
               {i < STATUSES.length - 1 && (
-                <svg width="34" height="14" viewBox="0 0 34 14" aria-hidden="true" className="string-arrow text-[var(--amber)]">
-                  <path d="M1 7q2.5-5 5 0t5 0 5 0 5 0 5 0" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  <path d="M27 3l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <StringArrow {...STRINGS[i]} />
               )}
             </li>
           ))}
