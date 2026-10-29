@@ -125,7 +125,7 @@ export default function StringersPage() {
       </Section>
 
       <Section label="Who does what" hue="amber" title="Stringers string. Organisers handle the money.">
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid items-start gap-10 md:grid-cols-[1fr_1fr_auto]">
           <div className="border-t border-divider pt-5">
             <h3 className="text-lg font-semibold">Stringers</h3>
             <p className="mt-1.5 text-[15px] text-text-2">
@@ -140,6 +140,10 @@ export default function StringersPage() {
               see “Coming soon”.
             </p>
           </div>
+          <figure className="flex flex-col items-center gap-2">
+            <Phone src="/media/screens/stringer-assigned.webp" alt="A stringer’s view in BPM: rackets assigned to them, with Mark received and Mark ready, and no prices" className="max-w-[220px]" />
+            <figcaption className="text-sm text-text-3">What a stringer sees</figcaption>
+          </figure>
         </div>
       </Section>
 
