@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { WEEK } from '@/content/en';
 
@@ -9,42 +8,110 @@ const FRAME =
 
 type Step = (typeof WEEK)[number];
 const captionOf = (s: Step) => ('caption' in s ? s.caption : undefined);
+const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
-/** One app screen that, while playing, eases in on the part of the screen the step is about and pulses a tap marker there. */
-function Screen({ step, playing, sizes, alt, className = '' }: { step: Step; playing: boolean; sizes: string; alt: string; className?: string }) {
-  const vars = {
-    '--fx': `${step.focus[0]}%`,
-    '--fy': `${step.focus[1]}%`,
-    '--tx': `${step.tap[0]}%`,
-    '--ty': `${step.tap[1]}%`,
-  } as React.CSSProperties;
+function seek(v: HTMLVideoElement | null, progress: number) {
+  if (!v || !v.duration || Number.isNaN(v.duration)) return;
+  // Stop just short of the end so the last frame stays decoded on every browser.
+  const t = progress * Math.max(0, v.duration - 0.05);
+  if (Math.abs(v.currentTime - t) > 0.01) v.currentTime = t;
+}
+
+function Clip({ step, videoRef, label }: { step: Step; videoRef: (el: HTMLVideoElement | null) => void; label?: string }) {
   return (
-    <div className={`screen-anim ${playing ? 'is-playing' : ''} ${className}`} style={vars} aria-hidden={alt ? undefined : true}>
-      <Image src={step.screen} alt={alt} fill sizes={sizes} className="object-cover object-top" />
-      <span className="tap-ring" aria-hidden="true" />
-    </div>
+    <video
+      ref={videoRef}
+      className="absolute inset-0 h-full w-full object-cover object-top"
+      poster={step.screen}
+      muted
+      playsInline
+      preload="none"
+      tabIndex={-1}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
+    >
+      <source src={`${step.clip}.mp4`} type="video/mp4" />
+    </video>
   );
 }
 
 export function WeekStory() {
   const [active, setActive] = useState(0);
+  const root = useRef<HTMLDivElement>(null);
   const steps = useRef<(HTMLLIElement | null)[]>([]);
+  const inline = useRef<(HTMLVideoElement | null)[]>([]);
+  const stuck = useRef<(HTMLVideoElement | null)[]>([]);
+  const activeRef = useRef(0);
 
   useEffect(() => {
-    const io = new IntersectionObserver(
+    const rootEl = root.current;
+    if (!rootEl) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const all = () => [...inline.current, ...stuck.current].filter(Boolean) as HTMLVideoElement[];
+
+    let loaded = false;
+    const loader = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.index));
-        }
+        if (loaded || reduce || !entries.some((e) => e.isIntersecting)) return;
+        loaded = true;
+        all().forEach((v) => {
+          v.preload = 'auto';
+          v.load();
+        });
+        loader.disconnect();
       },
-      { rootMargin: '-45% 0px -45% 0px' },
+      { rootMargin: '100% 0px' },
     );
-    steps.current.forEach((el) => el && io.observe(el));
-    return () => io.disconnect();
+    loader.observe(rootEl);
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const vh = window.innerHeight;
+      const desktop = window.matchMedia('(min-width: 768px)').matches;
+      let current = activeRef.current;
+
+      steps.current.forEach((li, i) => {
+        if (!li) return;
+        const r = li.getBoundingClientRect();
+        if (r.top <= vh / 2 && r.bottom >= vh / 2) current = i;
+        if (reduce) return;
+        if (desktop) {
+          // The step's card crossing the middle of the screen drives its clip from first frame to last.
+          const p = clamp01((vh * 0.5 - r.top) / r.height);
+          seek(stuck.current[i], p);
+        } else {
+          const fig = inline.current[i]?.closest('figure');
+          if (!fig) return;
+          const f = fig.getBoundingClientRect();
+          seek(inline.current[i], clamp01((vh * 0.8 - f.top) / (f.height + vh * 0.4)));
+        }
+      });
+
+      if (current !== activeRef.current) {
+        activeRef.current = current;
+        setActive(current);
+      }
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    all().forEach((v) => v.addEventListener('loadedmetadata', onScroll));
+    update();
+    return () => {
+      loader.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      all().forEach((v) => v.removeEventListener('loadedmetadata', onScroll));
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
-    <div className="week-story mx-auto grid max-w-5xl gap-10 md:grid-cols-2 md:gap-12">
+    <div ref={root} className="week-story mx-auto grid max-w-5xl gap-10 md:grid-cols-2 md:gap-12">
       <ol className="flex flex-col gap-6 md:gap-0 md:py-[25vh]">
         {WEEK.map((s, i) => (
           <li
@@ -52,7 +119,6 @@ export function WeekStory() {
             ref={(el) => {
               steps.current[i] = el;
             }}
-            data-index={i}
             className="flex flex-col gap-5 md:min-h-[60vh] md:items-end md:justify-center"
           >
             <div
@@ -69,7 +135,13 @@ export function WeekStory() {
             <figure className="flex flex-col items-center gap-2 md:hidden">
               <div className={`${FRAME} max-w-[260px]`}>
                 <div className="relative aspect-[390/844] overflow-hidden rounded-[34px] bg-[#100f0f]">
-                  <Screen step={s} playing={i === active} sizes="260px" alt={s.alt} />
+                  <Clip
+                    step={s}
+                    label={s.alt}
+                    videoRef={(el) => {
+                      inline.current[i] = el;
+                    }}
+                  />
                 </div>
               </div>
               {captionOf(s) && <figcaption className="text-sm text-text-3">{captionOf(s)}</figcaption>}
@@ -84,14 +156,15 @@ export function WeekStory() {
             <div className={FRAME} style={{ width: 'min(360px, calc((100vh - 9rem) * 0.462))' }}>
               <div className="relative aspect-[390/844] overflow-hidden rounded-[34px] bg-[#100f0f]">
                 {WEEK.map((s, i) => (
-                  <Screen
-                    key={s.screen}
-                    step={s}
-                    playing={i === active}
-                    sizes="360px"
-                    alt={i === active ? s.alt : ''}
-                    className={`week-shot ${i === active ? 'opacity-100' : 'opacity-0'}`}
-                  />
+                  <div key={s.clip} className={`week-shot absolute inset-0 ${i === active ? 'opacity-100' : 'opacity-0'}`}>
+                    <Clip
+                      step={s}
+                      label={i === active ? s.alt : undefined}
+                      videoRef={(el) => {
+                        stuck.current[i] = el;
+                      }}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
