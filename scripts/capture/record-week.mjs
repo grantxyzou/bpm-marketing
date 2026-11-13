@@ -7,7 +7,7 @@ import { mkdirSync, mkdtempSync, rmSync, statSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { execFileSync } from 'child_process';
-import { chromium, newPhone, login, settle, adminApi, setSession, DEMO_PLAYERS } from './lib.mjs';
+import { chromium, newPhone, login, settle, adminApi, setSession, nextThursday, DEMO_PLAYERS } from './lib.mjs';
 
 const OUT = new URL('../../public/media/week/', import.meta.url).pathname;
 mkdirSync(OUT, { recursive: true });
@@ -92,7 +92,14 @@ if (run === 'a') {
   for (const name of DEMO_PLAYERS.slice(11, 13)) await api.call('POST', '/api/players', { name, waitlist: true });
   const placeholderId = placeholder?.id ?? placeholder?.player?.id;
   if (!placeholderId) throw new Error(`no id for placeholder: ${JSON.stringify(placeholder).slice(0, 200)}`);
+  // A freed spot goes to the first person waiting (the app's waitlist auto-promote), but only before
+  // the session starts. Date the session a week back for the delete, then put the time back, so the
+  // spot stays open for Lin while the waitlist still shows.
+  const lastWeek = (iso) => new Date(Date.parse(iso) - 7 * 24 * 3600e3).toISOString();
+  const t = await nextThursday(api.offsetOf);
+  await api.call('PUT', '/api/session', { datetime: lastWeek(t.start), endDatetime: lastWeek(t.end), deadline: lastWeek(t.deadline) });
   await api.call('DELETE', '/api/players', { purgeOne: placeholderId });
+  await setSession(api);
 
   const ctx = await newPhone(browser);
   const p = await ctx.newPage();
@@ -128,7 +135,8 @@ if (run === 'a') {
   await p.keyboard.press('Escape').catch(() => {});
   await p.evaluate(() => window.scrollTo(0, 0));
   await settle(p, 800);
-  const cancel = p.getByText("Can't make it? Cancel my spot").locator('visible=true').first();
+  // "Can't make it?" and the "Cancel my spot" link are separate elements now; aim at the link.
+  const cancel = p.getByText('Cancel my spot', { exact: true }).locator('visible=true').first();
   await cancel.evaluate((el) => el.scrollIntoView({ block: 'center' }));
   await settle(p, 800);
   await rec.start();
@@ -178,9 +186,16 @@ if (run === 'b') {
   await p.waitForTimeout(300);
   await bal.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   await p.waitForTimeout(1300);
-  await p.getByRole('button', { name: /I.ve sent it/ }).locator('visible=true').first().click();
-  await p.waitForTimeout(1700);
+  // End on the press, as step 1 does. After the release the app says the share is "marked paid when
+  // the e-transfer arrives", which is the payment matching the public site leaves out.
+  const sent = p.getByRole('button', { name: /I.ve sent it/ }).locator('visible=true').first();
+  const sb = await sent.boundingBox();
+  await p.mouse.move(sb.x + sb.width / 2, sb.y + sb.height / 2);
+  await p.waitForTimeout(250);
+  await p.mouse.down();
+  await p.waitForTimeout(500);
   await rec.stop('step-4');
+  await p.mouse.up();
   await ctx.close();
 }
 
