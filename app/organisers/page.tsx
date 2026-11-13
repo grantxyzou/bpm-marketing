@@ -97,7 +97,7 @@ export default function OrganisersPage() {
           {[
             ['Not a league manager', 'No fixtures, divisions or standings. It’s for friends who book a court every week.'],
             ['Not a booking platform', 'You still book the courts with your venue. BPM handles everything after that.'],
-            ['Not a payment processor', 'Money moves between your players and you, the way it does now. BPM keeps the record.'],
+            ['Your money, your account', 'Take e-transfers the way you do now, or connect your club’s own Stripe account and let players pay by card. Card payments land in your account, not BPM’s. BPM keeps the record either way.'],
           ].map(([t, b]) => (
             <div key={t} className="border-t border-divider pt-5">
               <h3 className="text-lg font-semibold">{t}</h3>

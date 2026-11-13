@@ -152,7 +152,7 @@ export default function StringersPage() {
         hue="amber"
         label="For stringers"
         title="Run your club’s restringing like a small shop."
-        lede="If you string rackets for the people you play with, BPM gives you a bench for the jobs, a shelf for your strings, and a bill that lands on the player’s balance with everything else they owe."
+        lede="If you string rackets for the people you play with, BPM gives you a bench for the jobs, a shelf for your strings, and a bill that lands on the player’s balance with everything else they owe. The stringing tools are free for a limited time while BPM is in beta."
       >
         <div className="mt-2">
           <GetTheApp />
@@ -236,7 +236,8 @@ export default function StringersPage() {
             <div className="string-rule string-rule-muted pl-6">
               <h3 className="text-xl font-semibold">Organisers</h3>
               <p className="mt-1.5 text-text-2">
-                Open or close the shop, run the full bench, set prices and the shelf, and mark jobs paid. Until the shop is open, players
+                Open or close the shop, run the full bench, set prices and the shelf, and mark jobs paid, or let players pay for a finished
+                restring by card into the club’s own Stripe account. Until the shop is open, players
                 see “Coming soon”.
               </p>
             </div>
