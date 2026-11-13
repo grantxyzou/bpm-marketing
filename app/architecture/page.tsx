@@ -66,14 +66,14 @@ export default function ArchitecturePage() {
             ))}
           </div>
           <Connector />
-          <div className="field glass overflow-hidden p-6" style={{ borderColor: 'color-mix(in srgb, var(--accent) 45%, transparent)' }}>
+          <div className="field glass glass-selected overflow-hidden p-6">
             <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
               <span className="font-display text-xl font-semibold">BPM web app</span>
               <span className="mono text-[12px] text-text-3">Next.js · React · TypeScript · Azure App Service</span>
             </div>
             <ul className="grid gap-2 sm:grid-cols-2">
               {APP_PARTS.map((p) => (
-                <li key={p} className="rounded-xl border border-divider px-3.5 py-2.5 text-[15px] text-text-2">
+                <li key={p} className="rounded-xl bg-[var(--tile)] px-3.5 py-2.5 text-[15px] text-text-2">
                   {p}
                 </li>
               ))}

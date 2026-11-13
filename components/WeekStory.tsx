@@ -128,8 +128,8 @@ export function WeekStory() {
             className="flex flex-col gap-5 md:min-h-[60vh] md:items-end md:justify-center"
           >
             <div
-              className={`glass flex flex-col gap-3 p-6 transition-[border-color,opacity] duration-300 md:w-full md:max-w-md md:p-8 ${
-                i === active ? 'md:border-[color-mix(in_srgb,var(--accent)_55%,transparent)]' : 'md:opacity-55'
+              className={`glass flex flex-col gap-3 p-6 transition-[background-color,opacity] duration-300 md:w-full md:max-w-md md:p-8 ${
+                i === active ? 'glass-selected' : 'md:opacity-55'
               }`}
               aria-current={i === active ? 'step' : undefined}
             >
