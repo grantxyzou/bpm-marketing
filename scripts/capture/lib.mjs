@@ -77,12 +77,19 @@ export async function settle(page, ms = 1500) {
 }
 
 // Next Thursday 19:30 Vancouver time, at least ~30h out so sign-ups stay open.
-export function nextThursday() {
+// `offsetOf(date)` gives Vancouver's UTC offset on that day. Pass the BROWSER's answer (see adminApi):
+// Node and Chromium can ship different time-zone data, and the screenshots show the browser's reading.
+// In November 2026 Node's tzdata 2026e put Vancouver at -07:00 while this Chromium said -08:00, so
+// a session stamped with Node's offset rendered as 6:30 PM.
+const nodeOffset = (d) =>
+  new Intl.DateTimeFormat('en-US', { timeZone: 'America/Vancouver', timeZoneName: 'longOffset' }).format(d).match(/GMT([+-]\d\d:\d\d)/)[1];
+
+export async function nextThursday(offsetOf = nodeOffset) {
   const now = new Date();
   const d = new Date(now.getTime() + 30 * 3600e3);
   while (new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'America/Vancouver' }).format(d) !== 'Thu') d.setTime(d.getTime() + 24 * 3600e3);
   const ymd = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Vancouver' }).format(d);
-  const off = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Vancouver', timeZoneName: 'longOffset' }).format(d).match(/GMT([+-]\d\d:\d\d)/)[1];
+  const off = await offsetOf(d);
   return { start: `${ymd}T19:30:00${off}`, end: `${ymd}T21:30:00${off}`, deadline: `${ymd}T12:00:00${off}` };
 }
 
@@ -99,11 +106,21 @@ export async function adminApi(browser) {
     if (!res.ok()) console.warn(`${method} ${path} -> ${res.status()} ${text.slice(0, 200)}`);
     try { return JSON.parse(text); } catch { return text; }
   };
-  return { call, close: () => ctx.close() };
+  // Vancouver's offset as the browser that takes the screenshots reads it.
+  const offsetOf = async (d) => {
+    const page = await ctx.newPage();
+    const off = await page.evaluate(
+      (iso) => new Intl.DateTimeFormat('en-US', { timeZone: 'America/Vancouver', timeZoneName: 'longOffset' }).format(new Date(iso)).match(/GMT([+-]\d\d:\d\d)/)[1],
+      d.toISOString(),
+    );
+    await page.close();
+    return off;
+  };
+  return { call, offsetOf, close: () => ctx.close() };
 }
 
 export async function setSession(api) {
-  const t = nextThursday();
+  const t = await nextThursday(api.offsetOf);
   return api.call('PUT', '/api/session', {
     title: 'Thursday Badminton', locationName: 'Northside Community Centre', locationAddress: 'Courts 3 & 4',
     datetime: t.start, endDatetime: t.end, deadline: t.deadline, maxPlayers: 12, courts: 3, costPerCourt: 60,
