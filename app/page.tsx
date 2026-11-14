@@ -161,9 +161,9 @@ export default function HomePage() {
 
       {/* Details */}
       <Section label="The details" title="The little things, handled.">
-        <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-divider bg-[var(--divider)] sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {DETAILS.map((d) => (
-            <li key={d.title} className="bg-[var(--bg)] p-6">
+            <li key={d.title} className="rounded-[var(--radius-card)] bg-[var(--tile)] p-6">
               <h3 className="text-lg font-semibold">{d.title}</h3>
               <p className="mt-1.5 text-[15px] text-text-2">{d.body}</p>
             </li>

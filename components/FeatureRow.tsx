@@ -6,7 +6,7 @@ export function FeatureRow({ area, flip, headingLevel = 'h3' }: { area: FeatureA
   return (
     <article
       id={area.id}
-      className="field grid scroll-mt-24 items-center gap-10 overflow-hidden rounded-[var(--radius-field)] border border-divider px-6 py-10 md:grid-cols-2 md:gap-16 md:px-12 md:py-14"
+      className="field grid scroll-mt-24 items-center gap-10 overflow-hidden rounded-[var(--radius-field)] bg-[var(--tile)] px-6 py-10 md:grid-cols-2 md:gap-16 md:px-12 md:py-14"
       data-hue={area.hue}
     >
       <div className={`flex flex-col gap-4 ${flip ? 'md:order-2' : ''}`}>

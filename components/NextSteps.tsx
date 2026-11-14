@@ -22,7 +22,7 @@ export function NextSteps({ links }: { links: SitePath[] }) {
           <li key={href}>
             <Link
               href={href}
-              className="glass group flex items-center justify-between gap-4 p-5 transition-colors hover:border-[color-mix(in_srgb,var(--accent)_45%,transparent)]"
+              className="glass glass-hover group flex items-center justify-between gap-4 p-5 transition-colors"
             >
               <span>
                 <span className="block text-lg font-semibold">{PAGES[href].title}</span>
