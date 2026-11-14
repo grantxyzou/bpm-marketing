@@ -26,7 +26,7 @@ export const WEEK = [
     screen: '/media/screens/balance.webp',
     clip: '/media/week/step-3',
     alt: 'BPM sign-up confirmation with a link to cancel your spot',
-    body: 'Can’t make it after all? Cancel your own spot and the next person on the waitlist can move up.',
+    body: 'Can’t make it after all? Cancel your own spot and the next person on the waitlist moves up.',
   },
   {
     step: '04',
