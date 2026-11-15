@@ -18,13 +18,15 @@ export const FONT = {
 export const C = {
   bg: '#100f0f',
   text: '#e8ecf1',
-  text2: 'rgba(255,255,255,0.68)',
+  text2: 'rgba(255,255,255,0.7)',
   text3: 'rgba(255,255,255,0.5)',
   green: '#4ade80',
   amber: '#fbbf24',
   blue: '#60a5fa',
   orange: '#fb923c',
   divider: 'rgba(255,255,255,0.08)',
+  // Fill-only containers, as in the app: a tint, never an outline.
+  tile: 'rgba(255,255,255,0.045)',
 };
 
 export type Hue = 'green' | 'amber' | 'blue' | 'orange';

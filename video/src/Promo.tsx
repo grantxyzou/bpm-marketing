@@ -60,8 +60,7 @@ function Problem() {
             gap: 16,
             padding: 32,
             borderRadius: 24,
-            border: '1.5px solid rgba(255,255,255,0.12)',
-            background: 'linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))',
+            background: 'rgba(255,255,255,0.05)',
           }}
         >
           {CHAT.map((m, i) => {
@@ -232,7 +231,7 @@ function Details() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 28 }}>
           {DETAILS.map(([t, b], i) => (
             <Rise key={t} start={22 + i * 8}>
-              <div style={{ borderTop: `1.5px solid ${C.divider}`, paddingTop: 26, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ background: C.tile, borderRadius: 24, padding: 30, height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div style={{ fontFamily: FONT.display, fontWeight: 600, fontSize: 36 }}>{t}</div>
                 <div style={{ fontSize: 26, lineHeight: 1.4, color: C.text2 }}>{b}</div>
               </div>
@@ -255,7 +254,7 @@ function Cta() {
           <Headline size={100}>Get your group on the court.</Headline>
         </Rise>
         <Rise start={18}>
-          <Body size={36}>Free. iPhone and Android beta, or in your browser.</Body>
+          <Body size={36}>Free during the beta. iPhone and Android, or in your browser.</Body>
         </Rise>
         <Rise start={28}>
           <div
@@ -263,8 +262,9 @@ function Cta() {
               marginTop: 12,
               padding: '18px 34px',
               borderRadius: 14,
-              background: '#22c55e',
-              color: '#052e16',
+              background: 'linear-gradient(160deg, rgba(74,222,128,0.55) 0%, rgba(22,163,74,0.4) 100%)',
+              border: '1.5px solid rgba(74,222,128,0.45)',
+              color: '#fff',
               fontFamily: FONT.mono,
               fontWeight: 700,
               fontSize: 34,

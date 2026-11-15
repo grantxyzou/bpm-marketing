@@ -31,7 +31,7 @@ Set `ORIGIN` if the server isn't on `http://localhost:3100`.
 
 ## What the scripts do to the demo data
 
-- **Real club details are swapped out.** The mock seed uses Grant's real club and venue. `lib.mjs` rewrites API responses and on-screen text: "BPM Core" becomes "Thursday Shuttlers", the venue becomes "Northside Community Centre, Courts 3 & 4", and `localhost` invite links become the production app URL. The session is moved to next Thursday at 7:30 PM, Vancouver time.
+- **Real club details are swapped out.** The mock seed uses Grant's real club and venue. `lib.mjs` rewrites API responses and on-screen text: "BPM Core" becomes "Thursday Shuttlers", the venue becomes "Northside Community Centre, Courts 3 & 4", and `localhost` invite links become the production app URL. The session is moved to next Thursday at 7:30 PM, Vancouver time, using the UTC offset the browser reports. Node and Chromium can ship different time-zone data (in November 2026 they disagreed by an hour), and the shots show the browser's reading.
 - **Demo names.** Seed players are famous badminton players (Lin, Viktor and others). Added players use generic first names (`DEMO_PLAYERS`).
 - **AI states are left out.** There's no `ANTHROPIC_API_KEY`, so the AI cards can't load. The Stats "You" tab error card is hidden, and the AI greeting, announcement polish and fit verdict aren't captured.
 - **No e-transfer screens.** The "send the bill" shot is the session card after the bill is sent ("Sent · $15"), not the share sheet, which would show e-transfer payment details.
@@ -56,7 +56,8 @@ node record-week.mjs b    # step-4 the bill arrives, tap "I've sent it"
 - Each clip is capped at 4 s (longer takes are sped up), 24 fps, 584×1264, H.264 **all-intra** (every frame a keyframe) so scrubbing can seek to any frame instantly. CRF starts at 26 and rises until the file is ≤ 1.2 MB.
 - `step-N-first.webp` and `step-N-last.webp` are the first and last frames, for posters and reduced motion.
 - Run `a` seeds 12 players plus two on the waitlist, then removes one placeholder player so Lin's sign-up takes the last spot with the waitlist already showing. The API ignores `waitlist: true` while there's room, which is why it fills first.
-- The waitlist doesn't move up after Lin cancels: in the app, the organiser promotes from the waitlist.
+- The app hands a freed spot to the first person waiting, but only before the session starts. Run `a` dates the session a week back while it deletes the placeholder, then restores the time, so the spot stays open for Lin. When Lin cancels in step 3, Eli moves up on camera and Lin's card reads "Session Full".
+- Step 4 ends on the press of "I've sent it", not after it: the confirmation that follows says the share is marked paid when the e-transfer arrives, which is payment matching the public site leaves out.
 
 ## Stringing screens (`capture-stringing.mjs`)
 
