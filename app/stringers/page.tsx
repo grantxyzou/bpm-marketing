@@ -51,7 +51,7 @@ const BENCH: { t: string; b: string; media: Media }[] = [
   {
     t: 'Every racket on one bench',
     b: 'Jobs move from Requested to Picked up, one tap at a time, with Undo if you tap the wrong one. Switch between your jobs and everyone’s.',
-    media: { kind: 'img', src: '/media/crops/bench-list.webp', alt: 'Two jobs on the BPM stringing bench with their status and due date, under a Mine / All switch' },
+    media: { kind: 'img', src: '/media/crops/bench-list.webp', alt: 'A job on the BPM stringing bench with its status, progress and due date, under a Mine / All switch' },
   },
   {
     t: 'Due dates you can see',
@@ -116,7 +116,7 @@ function TileMedia({ media }: { media: Media }) {
           ['Viktor', 'Today', '#fbbf24'],
           ['Lin', 'Tomorrow', '#fbbf24'],
         ].map(([n, d, c]) => (
-          <li key={n} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-[14px] text-[#e8ecf1]">
+          <li key={n} className="flex items-center justify-between rounded-xl bg-white/[0.07] px-3.5 py-2.5 text-[14px] text-[#e8ecf1]">
             <span>{n}</span>
             <span className="font-semibold" style={{ color: c }}>
               {d}
