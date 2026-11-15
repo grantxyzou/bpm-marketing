@@ -58,7 +58,7 @@ export const FEATURE_AREAS: FeatureArea[] = [
     body: 'The Home screen answers the three questions people actually open the app for: when and where, am I in, and what do I owe.',
     points: [
       'One-tap Join with a numbered roster',
-      'A real waitlist, in order, that organisers promote from',
+      'A real waitlist, in order. When a spot opens, the next person gets it',
       'Cancel your own spot, with a heads-up if it’s late',
       'Announcements with the cost per person right there',
     ],
