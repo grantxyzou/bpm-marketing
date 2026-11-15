@@ -2,7 +2,7 @@ export const SITE = {
   name: 'BPM',
   title: 'BPM — the weekly badminton session, without the group-chat admin',
   description:
-    'BPM runs a casual weekly badminton session: sign-ups and waitlist, each person’s share of the court and shuttles, and who has paid. Free, on iPhone, Android and the web.',
+    'BPM runs a casual weekly badminton session: sign-ups and waitlist, each person’s share of the court and shuttles, and who has paid, by e-transfer or card. Free during the beta, on iPhone, Android and the web.',
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.motioncraft-bpm.com').replace(/\/$/, ''),
   appUrl: 'https://bpm.grantzou.com/bpm',
   testflight: 'https://testflight.apple.com/join/y5nPzPEU',

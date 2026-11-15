@@ -60,7 +60,7 @@ export function Footer() {
         ))}
       </div>
       <div className="container-site flex flex-col gap-2 border-t border-divider py-6 text-sm text-text-3 sm:flex-row sm:justify-between">
-        <p>© {new Date().getFullYear()} BPM. Free to use.</p>
+        <p>© {new Date().getFullYear()} BPM. Free during the beta.</p>
         <p>English · 简体中文 in the app</p>
       </div>
     </footer>

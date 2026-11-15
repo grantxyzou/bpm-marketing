@@ -31,7 +31,7 @@ export function GetTheApp({ compact = false, showNote = true }: { compact?: bool
       </div>
       {showNote && (
         <p className="text-sm text-text-3">
-          Free. iPhone joins through TestFlight. The Android beta is invite-only for now, so ask your organiser to add you.
+          Free during the beta. iPhone joins through TestFlight. The Android beta is invite-only for now, so ask your organiser to add you.
           Or{' '}
           <a className="underline decoration-divider underline-offset-4 hover:text-text" href={SITE.appUrl}>
             open it in your browser
