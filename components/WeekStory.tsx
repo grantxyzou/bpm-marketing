@@ -55,20 +55,32 @@ export function WeekStory() {
       });
     }
 
-    let loaded = false;
+    // Only one set of phones is ever visible: the sticky one from md up, the inline ones below it.
+    const wide = window.matchMedia('(min-width: 768px)');
+    const near = { current: false };
+    const loadedSets = new Set<'stuck' | 'inline'>();
+    const loadVisibleSet = () => {
+      if (!near.current || reduce) return;
+      const which = wide.matches ? 'stuck' : 'inline';
+      if (loadedSets.has(which)) return;
+      loadedSets.add(which);
+      (which === 'stuck' ? stuck.current : inline.current).forEach((v) => {
+        if (!v) return;
+        v.preload = 'auto';
+        v.load();
+      });
+    };
     const loader = new IntersectionObserver(
       (entries) => {
-        if (loaded || reduce || !entries.some((e) => e.isIntersecting)) return;
-        loaded = true;
-        all().forEach((v) => {
-          v.preload = 'auto';
-          v.load();
-        });
+        if (!entries.some((e) => e.isIntersecting)) return;
+        near.current = true;
+        loadVisibleSet();
         loader.disconnect();
       },
       { rootMargin: '100% 0px' },
     );
     loader.observe(rootEl);
+    wide.addEventListener('change', loadVisibleSet);
 
     let frame = 0;
     const update = () => {
@@ -109,6 +121,7 @@ export function WeekStory() {
     update();
     return () => {
       loader.disconnect();
+      wide.removeEventListener('change', loadVisibleSet);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
       all().forEach((v) => v.removeEventListener('loadedmetadata', onScroll));
