@@ -8,9 +8,9 @@ export const SITE = {
   testflight: 'https://testflight.apple.com/join/y5nPzPEU',
   playTest: 'https://play.google.com/apps/internaltest/4701333322627550006',
   legal: {
-    privacy: 'https://bpm.grantzou.com/bpm/legal/privacy',
-    terms: 'https://bpm.grantzou.com/bpm/legal/terms',
-    support: 'https://bpm.grantzou.com/bpm/legal/support',
+    privacy: '/privacy',
+    terms: '/terms',
+    support: '/support',
     deleteAccount: 'https://bpm.grantzou.com/bpm/legal/delete-account',
   },
 } as const;
