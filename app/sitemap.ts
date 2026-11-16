@@ -12,6 +12,9 @@ const PAGES: { path: string; lastModified: string; priority: number }[] = [
   { path: '/download', lastModified: '2026-10-28', priority: 0.8 },
   { path: '/faq', lastModified: '2026-10-28', priority: 0.8 },
   { path: '/architecture', lastModified: '2026-10-28', priority: 0.4 },
+  { path: '/privacy', lastModified: '2026-11-16', priority: 0.3 },
+  { path: '/terms', lastModified: '2026-11-16', priority: 0.3 },
+  { path: '/support', lastModified: '2026-11-16', priority: 0.3 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
