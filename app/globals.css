@@ -255,7 +255,7 @@ p {
 
 /* Hero depth: the court etching trails the page as it scrolls. Scroll-driven, no JS. */
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: scroll()) {
+  @supports ((animation-timeline: scroll()) and (animation-range: 0 90vh)) {
     .hero-depth {
       animation: hero-depth linear both;
       animation-timeline: scroll(root);
@@ -320,7 +320,7 @@ p {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
     .week-zoom {
       animation: week-zoom linear both;
       animation-timeline: --week;
@@ -431,12 +431,9 @@ details[open] .faq-chevron {
   transition: transform 200ms var(--ease-glass);
 }
 
+/* Reduced motion is handled per animation above; the chevron keeps its state change, minus the rotation. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-property: opacity, color, background-color, border-color !important;
+  .faq-chevron {
+    transition: none;
   }
 }

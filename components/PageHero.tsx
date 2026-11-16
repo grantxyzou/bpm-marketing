@@ -18,7 +18,7 @@ export function PageHero({ path, label, title, lede, hue = 'green', children }: 
     <section className="field overflow-hidden" data-hue={hue}>
       <JsonLd data={crumbsLd} />
       <div className="container-site flex flex-col gap-5 pb-10 pt-8 md:pb-14 md:pt-12">
-        <nav aria-label="Breadcrumb">
+        <nav aria-label="Breadcrumbs">
           <ol className="flex items-center gap-2 text-sm text-text-3">
             <li>
               <Link href="/" className="hover:text-text">
@@ -26,8 +26,10 @@ export function PageHero({ path, label, title, lede, hue = 'green', children }: 
               </Link>
             </li>
             <li aria-hidden="true">/</li>
-            <li aria-current="page" className="text-text-2">
-              {label}
+            <li>
+              <Link href={path} aria-current="page" className="text-text-2 hover:text-text">
+                {label}
+              </Link>
             </li>
           </ol>
         </nav>
