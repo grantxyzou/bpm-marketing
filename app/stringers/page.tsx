@@ -7,6 +7,7 @@ import { Section } from '@/components/Section';
 import { Phone } from '@/components/Phone';
 import { CallToAction } from '@/components/CallToAction';
 import { GetTheApp } from '@/components/GetTheApp';
+import { PromoVideo } from '@/components/PromoVideo';
 
 export const metadata: Metadata = pageMeta(
   '/stringers',
@@ -158,6 +159,15 @@ export default function StringersPage() {
           <GetTheApp />
         </div>
       </PageHero>
+
+      <div className="container-site pb-6 pt-10">
+        <PromoVideo
+          src="/media/stringers-20s.mp4"
+          poster="/media/stringers-20s-poster.webp"
+          label="BPM for stringers, a 20-second video"
+          caption="Twenty seconds for stringers: a player books a restring in the app, then every job, spec and set of string is tracked in one place."
+        />
+      </div>
 
       <Section label="The bench" hue="amber" title="Every racket, from drop-off to pick-up.">
         <ol className="mb-12 flex flex-wrap items-center gap-2" aria-label="Job statuses">

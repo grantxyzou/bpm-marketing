@@ -6,6 +6,7 @@ import { Section } from '@/components/Section';
 import { Phone } from '@/components/Phone';
 import { CallToAction } from '@/components/CallToAction';
 import { GetTheApp } from '@/components/GetTheApp';
+import { PromoVideo } from '@/components/PromoVideo';
 
 export const metadata: Metadata = pageMeta('/organisers', 'For organisers', 'Run your casual badminton club in BPM: invite links, sign-ups and waitlist, shuttle stock, splitting the court cost and sending the bill. Free to start.');
 
@@ -48,6 +49,15 @@ export default function OrganisersPage() {
           <GetTheApp />
         </div>
       </PageHero>
+
+      <div className="container-site pb-6 pt-10">
+        <PromoVideo
+          src="/media/organisers-20s.mp4"
+          poster="/media/organisers-20s-poster.webp"
+          label="BPM for organisers, a 20-second video"
+          caption="Twenty seconds for organisers: open sign-ups, send the bill, and tick off who’s paid."
+        />
+      </div>
 
       <Section label="Getting started" hue="orange" title="From nothing to your first session.">
         <div className="grid items-center gap-12 md:grid-cols-[1.2fr_1fr]">
