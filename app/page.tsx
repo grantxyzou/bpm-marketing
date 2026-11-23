@@ -109,17 +109,13 @@ export default function HomePage() {
         </p>
       </Section>
 
-      <Section id="video" label="See it" title="One week of BPM, start to finish." center>
-        <div className="grid items-start gap-8 md:grid-cols-2">
-          <PromoVideo
-            src="/media/launch-20s.mp4"
-            poster="/media/launch-20s-poster.webp"
-            label="BPM in 20 seconds"
-            caption="The short version, in 20 seconds: sign up in one tap, see who’s paid, watch your game climb."
-            className="max-w-none"
-          />
-          <PromoVideo className="max-w-none" />
-        </div>
+      <Section id="video" label="See it" title="BPM in 20 seconds." center>
+        <PromoVideo
+          src="/media/launch-20s.mp4"
+          poster="/media/launch-20s-poster.webp"
+          label="BPM in 20 seconds"
+          caption="The short version, in 20 seconds: sign up in one tap, see who’s paid, watch your game climb."
+        />
       </Section>
 
       {/* Features */}
