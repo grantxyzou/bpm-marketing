@@ -1,0 +1,43 @@
+# Grouped Dependabot, mirroring grantxyzou/badminton-app: minor and patch
+# updates arrive as one PR per week per dependency type, security fixes as
+# one grouped PR, and majors individually so each gets its own review.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    groups:
+      production-deps:
+        applies-to: version-updates
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      development-deps:
+        applies-to: version-updates
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+    ignore:
+      # eslint-config-next 16 declares ESLint >=9 but its bundled
+      # eslint-plugin-react crashes on ESLint 10; hold ESLint on 9.x until
+      # eslint-config-next supports 10 (same hold as badminton-app).
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      # The site runs on Node 22 (engines), so types should track it.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # TypeScript majors are a deliberate migration, not an auto-merge.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
